@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard - ELF Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: "Sarabun", sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 2rem;
+      color: #333;
+    }
+
+    .label {
+      color: #888;
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+    }
+
+    .positive { color: green; font-weight: bold; }
+    .negative { color: crimson; font-weight: bold; }
+
+    #goalInput {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.8rem;
+      font-size: 1rem;
+    }
+
+    #saveGoal {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #007b00;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📊 สรุปยอดขาย - ELF Admin</h1>
+
+  <div class="grid">
+    <div class="card">
+      <h2 id="thisMonthTotal">฿0</h2>
+      <div class="label">ยอดขายเดือนนี้</div>
+    </div>
+    <div class="card">
+      <h2 id="goalTotal">฿0</h2>
+      <div class="label">เป้าหมายยอดขาย</div>
+      <input type="number" id="goalInput" placeholder="ใส่เป้าหมายใหม่ (บาท)" />
+      <button id="saveGoal">💾 Save</button>
+    </div>
+    <div class="card">
+      <h2 id="compareWeek" class="positive">+0%</h2>
+      <div class="label">เปรียบเทียบยอด 7 วันล่าสุด</div>
+    </div>
+    <div class="card">
+      <h2 id="orderCount">0 รายการ</h2>
+      <div class="label">จำนวนออเดอร์รวม</div>
+    </div>
+  </div>
+
+  <script>
+    const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    const goal = parseFloat(localStorage.getItem("salesGoal") || "50000");
+
+    const now = new Date();
+    const thisMonth = now.getMonth();
+    const today = now.getDate();
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(today - 7);
+
+    let thisMonthTotal = 0;
+    let thisWeekTotal = 0;
+    let lastWeekTotal = 0;
+
+    orders.forEach(order => {
+      const date = new Date(order.date);
+      const total = parseFloat(order.total || 0);
+
+      if (date.getMonth() === thisMonth) {
+        thisMonthTotal += total;
+      }
+
+      if (date >= oneWeekAgo) {
+        thisWeekTotal += total;
+      } else {
+        lastWeekTotal += total;
+      }
+    });
+
+    let percent = 0;
+    if (lastWeekTotal > 0) {
+      percent = ((thisWeekTotal - lastWeekTotal) / lastWeekTotal * 100).toFixed(1);
+    }
+
+    document.getElementById("thisMonthTotal").textContent = "฿" + thisMonthTotal.toLocaleString();
+    document.getElementById("goalTotal").textContent = "฿" + goal.toLocaleString();
+    document.getElementById("orderCount").textContent = orders.length + " รายการ";
+
+    const compareEl = document.getElementById("compareWeek");
+    compareEl.textContent = (percent >= 0 ? "+" : "") + percent + "%";
+    compareEl.className = percent >= 0 ? "positive" : "negative";
+
+    // ตั้งเป้าใหม่
+    document.getElementById("saveGoal").onclick = function () {
+      const val = parseFloat(document.getElementById("goalInput").value);
+      if (!isNaN(val) && val > 0) {
+        localStorage.setItem("salesGoal", val);
+        document.getElementById("goalTotal").textContent = "฿" + val.toLocaleString();
+        document.getElementById("goalInput").value = "";
+        alert("🎯 ตั้งเป้าใหม่เรียบร้อย!");
+      } else {
+        alert("ใส่ตัวเลขให้ถูกก่อนจ้าาา");
+      }
+    };
+  </script>
+</body>
+</html>
