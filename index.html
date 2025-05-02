@@ -3,10 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ระบบออเดอร์ร้านผ้าคลุมโซฟา</title>
-  <style> /* … (ซ่อน CSS ตามข้างบน) … */ </style>
+  <title>ELF Admin</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #fafafa; }
+    .form-container, .list-container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    h1, h2 { text-align: center; }
+    input, textarea, select {
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    button {
+      background: #0a7c0a;
+      color: white;
+      border: none;
+      padding: 0.8rem;
+      font-size: 1rem;
+      width: 100%;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    ul { padding-left: 1rem; }
+    li { margin-bottom: 0.5rem; }
+  </style>
 </head>
 <body>
-  <h1>เว็บทดสอบ</h1>
+
+  <div class="form-container">
+    <h1>ฟอร์มบันทึกลูกค้า</h1>
+    <input type="text" placeholder="ชื่อลูกค้า" id="cus-name" />
+    <input type="text" placeholder="เบอร์โทร" id="cus-phone" />
+    <textarea placeholder="ที่อยู่จัดส่ง" id="cus-address"></textarea>
+    <input type="text" placeholder="ลายผ้า / รุ่นโซฟา" id="cus-pattern" />
+    <input type="number" placeholder="ยอดเต็ม (บาท)" id="cus-total" />
+    <input type="number" placeholder="ยอดมัดจำ (บาท)" id="cus-deposit" />
+    <input type="date" placeholder="วันนัดส่งของ" id="cus-delivery" />
+    <select id="cus-status">
+      <option>รับออเดอร์แล้ว</option>
+      <option>ตัดผ้า</option>
+      <option>เย็บอยู่</option>
+      <option>แพ็กของ</option>
+      <option>ส่งแล้ว</option>
+    </select>
+    <button onclick="saveCustomer()">บันทึกข้อมูล</button>
+  </div>
+
+  <hr/>
+
+  <div class="list-container">
+    <h2>รายการลูกค้า</h2>
+    <ul id="customer-list"></ul>
+  </div>
+
+  <script>
+    const customers = [];
+
+    function saveCustomer() {
+      const name = document.getElementById("cus-name").value;
+      const phone = document.getElementById("cus-phone").value;
+      const address = document.getElementById("cus-address").value;
+      const pattern = document.getElementById("cus-pattern").value;
+      const total = parseFloat(document.getElementById("cus-total").value);
+      const deposit = parseFloat(document.getElementById("cus-deposit").value);
+      const delivery = document.getElementById("cus-delivery").value;
+      const status = document.getElementById("cus-status").value;
+
+      if (!name || !phone || !pattern || !total) {
+        alert("กรอกข้อมูลสำคัญให้ครบก่อนจ้า");
+        return;
+      }
+
+      customers.push({ name, phone, address, pattern, total, deposit, delivery, status });
+      renderList();
+      clearForm();
+    }
+
+    function renderList() {
+      const list = document.getElementById("customer-list");
+      list.innerHTML = "";
+      customers.forEach((c, i) => {
+        const remain = c.total - c.deposit;
+        list.innerHTML += `<li><b>${c.name}</b> | ${c.pattern} | ส่ง ${c.delivery} | ค้างชำระ: ${remain}฿ | สถานะ: ${c.status}</li>`;
+      });
+    }
+
+    function clearForm() {
+      ['cus-name','cus-phone','cus-address','cus-pattern','cus-total','cus-deposit','cus-delivery'].forEach(id => {
+        document.getElementById(id).value = "";
+      });
+      document.getElementById("cus-status").value = "รับออเดอร์แล้ว";
+    }
+  </script>
+
 </body>
 </html>
