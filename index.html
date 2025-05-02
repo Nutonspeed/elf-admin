@@ -3,105 +3,185 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ELF Admin</title>
+  <title>ELF Admin Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: sans-serif; padding: 2rem; background: #fafafa; }
-    .form-container, .list-container {
+    body {
+      font-family: 'Sarabun', sans-serif;
+      margin: 0;
+      padding: 1.5rem;
+      background: #f9f9f9;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    header img {
+      max-width: 200px;
+      height: auto;
+    }
+
+    .container {
+      background: white;
       max-width: 600px;
       margin: auto;
-      background: white;
-      padding: 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.05);
     }
-    h1, h2 { text-align: center; }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
     input, textarea, select {
       width: 100%;
-      margin-bottom: 1rem;
       padding: 0.75rem;
+      margin-bottom: 1.2rem;
       border: 1px solid #ccc;
       border-radius: 6px;
       font-size: 1rem;
     }
+
     button {
+      width: 100%;
+      padding: 1rem;
       background: #0a7c0a;
       color: white;
       border: none;
-      padding: 0.8rem;
-      font-size: 1rem;
-      width: 100%;
+      font-size: 1.1rem;
       border-radius: 6px;
       cursor: pointer;
     }
-    ul { padding-left: 1rem; }
-    li { margin-bottom: 0.5rem; }
+
+    #preview {
+      margin-bottom: 1rem;
+      max-height: 150px;
+      object-fit: contain;
+      display: none;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .footer a {
+      text-decoration: none;
+      color: #0a7c0a;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
 
-  <div class="form-container">
-    <h1>ฟอร์มบันทึกลูกค้า</h1>
-    <input type="text" placeholder="ชื่อลูกค้า" id="cus-name" />
-    <input type="text" placeholder="เบอร์โทร" id="cus-phone" />
-    <textarea placeholder="ที่อยู่จัดส่ง" id="cus-address"></textarea>
-    <input type="text" placeholder="ลายผ้า / รุ่นโซฟา" id="cus-pattern" />
-    <input type="number" placeholder="ยอดเต็ม (บาท)" id="cus-total" />
-    <input type="number" placeholder="ยอดมัดจำ (บาท)" id="cus-deposit" />
-    <input type="date" placeholder="วันนัดส่งของ" id="cus-delivery" />
-    <select id="cus-status">
+  <header>
+    <img src="logo.png" alt="ELF Logo" />
+  </header>
+
+  <div class="container">
+    <h1>เพิ่มออเดอร์ลูกค้า</h1>
+
+    <label>ชื่อลูกค้า</label>
+    <input type="text" id="name" />
+
+    <label>เบอร์โทร</label>
+    <input type="text" id="phone" />
+
+    <label>ที่อยู่จัดส่ง</label>
+    <textarea id="address"></textarea>
+
+    <label>ลายผ้า / รายละเอียดสินค้า</label>
+    <input type="text" id="pattern" />
+
+    <label>ยอดเต็ม (บาท)</label>
+    <input type="number" id="total" />
+
+    <label>มัดจำแล้ว (บาท)</label>
+    <input type="number" id="deposit" />
+
+    <label>วันนัดส่ง</label>
+    <input type="date" id="delivery" />
+
+    <label>สถานะ</label>
+    <select id="status">
       <option>รับออเดอร์แล้ว</option>
       <option>ตัดผ้า</option>
       <option>เย็บอยู่</option>
       <option>แพ็กของ</option>
       <option>ส่งแล้ว</option>
     </select>
-    <button onclick="saveCustomer()">บันทึกข้อมูล</button>
+
+    <label>แนบรูปสินค้า</label>
+    <input type="file" id="image" accept="image/*" onchange="previewImage(event)" />
+    <img id="preview" />
+
+    <button onclick="saveOrder()">บันทึกออเดอร์</button>
   </div>
 
-  <hr/>
-
-  <div class="list-container">
-    <h2>รายการลูกค้า</h2>
-    <ul id="customer-list"></ul>
+  <div class="footer">
+    <p><a href="orders.html">📋 ดูออเดอร์ทั้งหมด</a></p>
   </div>
 
   <script>
-    const customers = [];
+    function previewImage(event) {
+      const img = document.getElementById('preview');
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          img.src = e.target.result;
+          img.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
 
-    function saveCustomer() {
-      const name = document.getElementById("cus-name").value;
-      const phone = document.getElementById("cus-phone").value;
-      const address = document.getElementById("cus-address").value;
-      const pattern = document.getElementById("cus-pattern").value;
-      const total = parseFloat(document.getElementById("cus-total").value);
-      const deposit = parseFloat(document.getElementById("cus-deposit").value);
-      const delivery = document.getElementById("cus-delivery").value;
-      const status = document.getElementById("cus-status").value;
+    function saveOrder() {
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const address = document.getElementById('address').value;
+      const pattern = document.getElementById('pattern').value;
+      const total = document.getElementById('total').value;
+      const deposit = document.getElementById('deposit').value;
+      const delivery = document.getElementById('delivery').value;
+      const status = document.getElementById('status').value;
+      const img = document.getElementById('preview').src;
 
       if (!name || !phone || !pattern || !total) {
-        alert("กรอกข้อมูลสำคัญให้ครบก่อนจ้า");
+        alert("กรอกข้อมูลให้ครบก่อนจ้า!");
         return;
       }
 
-      customers.push({ name, phone, address, pattern, total, deposit, delivery, status });
-      renderList();
-      clearForm();
-    }
+      const order = {
+        id: Date.now(),
+        name,
+        phone,
+        address,
+        pattern,
+        total,
+        deposit,
+        delivery,
+        status,
+        image: img
+      };
 
-    function renderList() {
-      const list = document.getElementById("customer-list");
-      list.innerHTML = "";
-      customers.forEach((c, i) => {
-        const remain = c.total - c.deposit;
-        list.innerHTML += `<li><b>${c.name}</b> | ${c.pattern} | ส่ง ${c.delivery} | ค้างชำระ: ${remain}฿ | สถานะ: ${c.status}</li>`;
-      });
-    }
+      let data = JSON.parse(localStorage.getItem("orders") || "[]");
+      data.push(order);
+      localStorage.setItem("orders", JSON.stringify(data));
 
-    function clearForm() {
-      ['cus-name','cus-phone','cus-address','cus-pattern','cus-total','cus-deposit','cus-delivery'].forEach(id => {
-        document.getElementById(id).value = "";
-      });
-      document.getElementById("cus-status").value = "รับออเดอร์แล้ว";
+      alert("บันทึกเรียบร้อย!");
+      window.location.href = "orders.html";
     }
   </script>
 
