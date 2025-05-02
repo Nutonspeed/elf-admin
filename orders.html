@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>รายการออเดอร์ - ELF Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .order-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .order-card img {
+      width: 130px;
+      height: 130px;
+      object-fit: cover;
+      border-right: 1px solid #eee;
+    }
+
+    .order-info {
+      padding: 1rem;
+      flex: 1;
+    }
+
+    .order-info h2 {
+      margin: 0 0 0.3rem 0;
+      font-size: 1.2rem;
+    }
+
+    .order-info p {
+      margin: 0.2rem 0;
+      font-size: 0.95rem;
+    }
+
+    .order-actions {
+      margin-top: 1rem;
+    }
+
+    .order-actions a {
+      text-decoration: none;
+      padding: 0.6rem 1rem;
+      background: #0a7c0a;
+      color: white;
+      border-radius: 6px;
+      margin-right: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .no-orders {
+      text-align: center;
+      margin-top: 4rem;
+      font-size: 1.1rem;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📋 รายการออเดอร์ทั้งหมด</h1>
+
+  <div id="orders-container"></div>
+
+  <script>
+    const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    const container = document.getElementById("orders-container");
+
+    if (orders.length === 0) {
+      container.innerHTML = `<p class="no-orders">ยังไม่มีรายการออเดอร์</p>`;
+    } else {
+      orders.reverse().forEach(order => {
+        const remain = parseFloat(order.total) - parseFloat(order.deposit || 0);
+        const html = `
+        <div class="order-card">
+          <img src="${order.image || 'https://via.placeholder.com/130'}" alt="รูปสินค้า">
+          <div class="order-info">
+            <h2>${order.name} (${order.pattern})</h2>
+            <p>📱 ${order.phone}</p>
+            <p>📦 ส่ง: ${order.delivery || '-'}</p>
+            <p>💰 ยอดเต็ม: ฿${order.total} | มัดจำ: ฿${order.deposit || 0}</p>
+            <p style="color:${remain > 0 ? 'red' : 'green'}">💸 ค้างชำระ: ฿${remain}</p>
+            <p>📌 สถานะ: ${order.status}</p>
+            <div class="order-actions">
+              <a href="print.html?id=${order.id}">พิมพ์ใบปะหน้า</a>
+            </div>
+          </div>
+        </div>
+        `;
+        container.innerHTML += html;
+      });
+    }
+  </script>
+
+</body>
+</html>
