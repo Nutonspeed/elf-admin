@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>พิมพ์ใบปะหน้า - ELF Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: "Sarabun", sans-serif;
+      margin: 2rem;
+      padding: 0;
+      background: #fff;
+    }
+    .label {
+      border: 1px dashed #333;
+      padding: 1.5rem;
+      max-width: 420px;
+      margin: auto;
+    }
+    .label h2 {
+      margin: 0 0 1rem 0;
+      font-size: 1.4rem;
+    }
+    .label p {
+      font-size: 1.1rem;
+      margin: 0.4rem 0;
+    }
+    .note {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #666;
+      text-align: center;
+    }
+    @media print {
+      body {
+        margin: 0;
+      }
+      .note {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="label" id="labelArea">
+  <h2>📦 ใบปะหน้า</h2>
+  <p><strong>รหัสบิล:</strong> <span id="orderId">-</span></p>
+  <p><strong>ชื่อลูกค้า:</strong> <span id="name">-</span></p>
+  <p><strong>เบอร์:</strong> <span id="phone">-</span></p>
+  <p><strong>ที่อยู่:</strong> <span id="address">-</span></p>
+  <p><strong>ลายผ้า:</strong> <span id="pattern">-</span></p>
+</div>
+
+<div class="note">
+  ✂️ ตรวจสอบก่อนพิมพ์ | กด Ctrl+P เพื่อพิมพ์
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+  const order = orders.find(o => o.id == id);
+
+  if (order) {
+    document.getElementById("orderId").textContent = order.id || "-";
+    document.getElementById("name").textContent = order.name || "-";
+    document.getElementById("phone").textContent = order.phone || "-";
+    document.getElementById("address").textContent = order.address || "-";
+    document.getElementById("pattern").textContent = order.pattern || "-";
+  } else {
+    document.getElementById("labelArea").innerHTML = "<p>ไม่พบข้อมูลออเดอร์นี้</p>";
+  }
+</script>
+
+</body>
+</html>
