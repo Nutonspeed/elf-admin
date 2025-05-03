@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>เปิดบิลใหม่ - ELF</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-[#fefcf9] text-[#3a3a3a] p-4">
+    <div class="max-w-3xl mx-auto bg-white shadow-xl rounded-2xl p-6">
+      <h1 class="text-2xl font-serif text-[#7c0a02] mb-6">เปิดบิลใหม่</h1>
+
+      <!-- กลุ่ม 1: ลูกค้า -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <input type="text" placeholder="ชื่อลูกค้า" class="rounded-xl border p-3" />
+        <input type="text" placeholder="เบอร์โทร" class="rounded-xl border p-3" />
+        <input type="date" placeholder="วันที่เปิดบิล" class="rounded-xl border p-3" />
+      </div>
+
+      <!-- กลุ่ม 2: รายการผ้า -->
+      <div class="mb-6">
+        <label class="block mb-1 font-semibold">รายการผ้า</label>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input type="text" placeholder="ชื่อผ้า / โค้ดผ้า" class="rounded-xl border p-3" />
+          <select class="rounded-xl border p-3">
+            <option>เลือกแหล่งผ้า</option>
+            <option>ในร้าน</option>
+            <option>Shopee</option>
+            <option>สั่งนอก</option>
+          </select>
+          <input type="number" placeholder="จำนวนผืน" class="rounded-xl border p-3" />
+        </div>
+      </div>
+
+      <!-- กลุ่ม 3: ยอดรวม & มัดจำ -->
+      <div class="mb-6">
+        <label class="block mb-1 font-semibold">ยอดรวม</label>
+        <input type="number" placeholder="ใส่ยอดรวม (บาท)" class="rounded-xl border p-3 w-full mb-3" />
+        <div class="flex gap-2">
+          <input type="number" placeholder="มัดจำ (บาท)" class="rounded-xl border p-3 w-full" />
+          <button class="bg-[#7c0a02] text-white px-4 py-2 rounded-xl">คำนวณ %</button>
+        </div>
+      </div>
+
+      <!-- กลุ่ม 4: แนบสลิป -->
+      <div class="mb-6">
+        <label class="block mb-1 font-semibold">แนบสลิปมัดจำ</label>
+        <input type="file" class="rounded-xl border p-3 w-full" />
+      </div>
+
+      <!-- กลุ่ม 5: วันผ้าเข้า & วันจัดส่ง -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <input type="date" placeholder="วันที่ผ้าเข้าไทย" class="rounded-xl border p-3" />
+        <input type="date" placeholder="วันนัดส่งสินค้า" class="rounded-xl border p-3" />
+      </div>
+
+      <!-- กลุ่ม 6: หมายเหตุ -->
+      <textarea placeholder="หมายเหตุเพิ่มเติม" class="rounded-xl border p-3 w-full mb-6" rows="3"></textarea>
+
+      <!-- ปุ่ม -->
+      <div class="flex justify-end gap-4">
+        <button class="border border-[#7c0a02] text-[#7c0a02] px-4 py-2 rounded-xl">พิมพ์บิล</button>
+        <button class="bg-[#7c0a02] text-white px-4 py-2 rounded-xl">บันทึกบิล</button>
+      </div>
+    </div>
+  </body>
+</html>
