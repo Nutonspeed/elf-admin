@@ -4,52 +4,63 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>แดชบอร์ด - ELF Admin</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: 'Sarabun', sans-serif;
-      background-color: #f9f7f1;
-      color: #333;
+      font-family: 'Playfair Display', serif;
+      background: linear-gradient(to bottom right, #faf7f1, #efe6d1);
+      color: #3b2c1e;
     }
     header {
-      background-color: #5a0f0f;
-      color: white;
-      padding: 1rem;
+      background: #5a0f0f;
+      padding: 1.5rem 2rem;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 1rem;
     }
     header img {
-      height: 40px;
+      height: 60px;
+    }
+    header h1 {
+      color: #fff;
+      font-size: 1.8rem;
     }
     nav {
-      background-color: #fff4e5;
+      background-color: #fff;
       display: flex;
       gap: 1rem;
-      padding: 1rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 1rem 2rem;
+      border-bottom: 2px solid #e1cfc0;
     }
     nav a {
       color: #5a0f0f;
       text-decoration: none;
       font-weight: bold;
+      font-size: 1rem;
     }
     nav a:hover {
       text-decoration: underline;
     }
     main {
       padding: 2rem;
+      max-width: 1200px;
+      margin: auto;
     }
     .card {
       background: white;
-      padding: 1rem 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      padding: 2rem;
+      border-radius: 2rem;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    h2 {
+      color: #5a0f0f;
+      font-size: 1.5rem;
       margin-bottom: 1rem;
     }
-    h1 {
-      color: #5a0f0f;
+    ul li {
+      margin-bottom: 0.5rem;
     }
   </style>
 </head>
@@ -69,7 +80,7 @@
   <main>
     <div class="card">
       <h2>ภาพรวมระบบ</h2>
-      <p>แสดงจำนวนออเดอร์เดือนนี้ / ยอดขายรวม / รายการที่ยังไม่เย็บ / ผ้ารอเข้า</p>
+      <p>อัปเดตล่าสุดเมื่อ: 4/5/68 | ยอดสั่งซื้อเดือนนี้ 24 รายการ | รอยืนยันผ้าเข้า 5 ชุด</p>
     </div>
     <div class="card">
       <h2>แจ้งเตือน</h2>
@@ -82,3 +93,4 @@
   </main>
 </body>
 </html>
+
