@@ -2,9 +2,9 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ELF Admin Pro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     body {
       font-family: 'Sarabun', sans-serif;
@@ -12,16 +12,37 @@
       padding: 1.5rem;
       background: #f9f9f9;
     }
-
-    header {
-      text-align: center;
+    .dashboard {
+      display: flex;
+      justify-content: space-around;
+      background: #330a0a;
+      color: #fff3e0;
+      padding: 1rem;
+      border-radius: 8px;
       margin-bottom: 2rem;
+      align-items: center;
     }
+    .dash-item {
+      text-align: center;
+    }
+    .dash-item h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .dash-item p {
+      margin: 0.3rem 0 0;
+      font-size: 0.9rem;
+      color: #f9f9f9aa;
+    }
+    .dash-percent {
+      font-weight: 700;
+    }
+    .dash-percent.positive { color: #8BC34A; }
+    .dash-percent.negative { color: #E53935; }
 
-    header img {
-      max-width: 200px;
-      height: auto;
-    }
+    header { text-align: center; margin-bottom: 2rem; }
+    header img { max-width: 200px; height: auto; }
 
     .container {
       background: white;
@@ -31,88 +52,58 @@
       border-radius: 12px;
       box-shadow: 0 0 12px rgba(0,0,0,0.05);
     }
-
     h1 {
       text-align: center;
       margin-bottom: 1rem;
       font-size: 1.4rem;
     }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 0.5rem;
+    label { font-weight: bold; display: block; margin-bottom: 0.5rem; }
+    input, textarea, select, button {
+      width: 100%; padding: 0.75rem; margin-bottom: 1.2rem;
+      border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;
     }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 0.75rem;
-      margin-bottom: 1.2rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-
     button {
-      width: 100%;
-      padding: 1rem;
-      background: #0a7c0a;
-      color: white;
-      border: none;
-      font-size: 1.1rem;
-      border-radius: 6px;
-      cursor: pointer;
+      background: #0a7c0a; color: white; border: none; cursor: pointer;
     }
+    #preview { margin-bottom: 1rem; max-height: 150px; object-fit: contain; display: none; }
 
-    #preview {
-      margin-bottom: 1rem;
-      max-height: 150px;
-      object-fit: contain;
-      display: none;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 2rem;
-    }
-
-    .footer a {
-      text-decoration: none;
-      color: #0a7c0a;
-      font-weight: bold;
-    }
+    .footer { text-align: center; margin-top: 2rem; }
+    .footer a { text-decoration: none; color: #0a7c0a; font-weight: bold; }
   </style>
 </head>
 <body>
 
+  <!-- Dashboard บนสุด -->
+  <div class="dashboard">
+    <div class="dash-item">
+      <h2 id="dash-month">฿0</h2>
+      <p>ยอดขายเดือนนี้</p>
+    </div>
+    <div class="dash-item">
+      <h2 id="dash-goal">฿0</h2>
+      <p>เป้าหมายเดือนนี้</p>
+    </div>
+    <div class="dash-item">
+      <h2 id="dash-week" class="dash-percent">+0%</h2>
+      <p>เทียบยอด 7 วัน</p>
+    </div>
+  </div>
+
+  <!-- โลโก้ -->
   <header>
-    <img src="logo.png" alt="ELF Logo" />
+    <img src="logo.png" alt="ELF Logo"/>
   </header>
 
+  <!-- ฟอร์มกรอกออเดอร์ -->
   <div class="container">
     <h1>เพิ่มออเดอร์ลูกค้า</h1>
-
-    <label>ชื่อลูกค้า</label>
-    <input type="text" id="name" />
-
-    <label>เบอร์โทร</label>
-    <input type="text" id="phone" />
-
-    <label>ที่อยู่จัดส่ง</label>
-    <textarea id="address"></textarea>
-
-    <label>ลายผ้า / รายละเอียดสินค้า</label>
-    <input type="text" id="pattern" />
-
-    <label>ยอดเต็ม (บาท)</label>
-    <input type="number" id="total" />
-
-    <label>มัดจำแล้ว (บาท)</label>
-    <input type="number" id="deposit" />
-
-    <label>วันนัดส่ง</label>
-    <input type="date" id="delivery" />
-
+    <label>ชื่อลูกค้า</label><input type="text" id="name"/>
+    <label>เบอร์โทร</label><input type="text" id="phone"/>
+    <label>ที่อยู่จัดส่ง</label><textarea id="address"></textarea>
+    <label>ลายผ้า / รายละเอียดสินค้า</label><input type="text" id="pattern"/>
+    <label>ยอดเต็ม (บาท)</label><input type="number" id="total"/>
+    <label>มัดจำแล้ว (บาท)</label><input type="number" id="deposit"/>
+    <label>วันนัดส่ง</label><input type="date" id="delivery"/>
     <label>สถานะ</label>
     <select id="status">
       <option>รับออเดอร์แล้ว</option>
@@ -121,11 +112,9 @@
       <option>แพ็กของ</option>
       <option>ส่งแล้ว</option>
     </select>
-
     <label>แนบรูปสินค้า</label>
-    <input type="file" id="image" accept="image/*" onchange="previewImage(event)" />
-    <img id="preview" />
-
+    <input type="file" id="image" accept="image/*" onchange="previewImage(event)"/>
+    <img id="preview"/>
     <button onclick="saveOrder()">บันทึกออเดอร์</button>
   </div>
 
@@ -134,56 +123,51 @@
   </div>
 
   <script>
-    function previewImage(event) {
-      const img = document.getElementById('preview');
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          img.src = e.target.result;
-          img.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
+    // โหลดเป้าหมายจาก LocalStorage
+    const salesGoal = parseFloat(localStorage.getItem("salesGoal") || "50000");
+    document.getElementById("dash-goal").textContent = "฿" + salesGoal.toLocaleString();
+
+    // คำนวณยอด
+    const orders = JSON.parse(localStorage.getItem("orders")||"[]");
+    const now = new Date(); const thisMonth = now.getMonth();
+    const oneWeekAgo = new Date(); oneWeekAgo.setDate(now.getDate() - 7);
+    let monthTotal=0, weekTotal=0, lastWeek=0;
+    orders.forEach(o=>{
+      const d=new Date(o.date), t=parseFloat(o.total||0);
+      if(d.getMonth()===thisMonth) monthTotal+=t;
+      if(d>=oneWeekAgo) weekTotal+=t; else lastWeek+=t;
+    });
+    const pct = lastWeek>0?((weekTotal-lastWeek)/lastWeek*100).toFixed(1):0;
+    // แสดงบนหน้า
+    document.getElementById("dash-month").textContent = "฿"+monthTotal.toLocaleString();
+    const pctEl=document.getElementById("dash-week");
+    pctEl.textContent = (pct>=0?"+":"")+pct+"%";
+    pctEl.className = "dash-percent "+(pct>=0?"positive":"negative");
+
+    // ฟังก์ชันอื่น ๆ (เหมือนเดิม)
+    function previewImage(e){
+      const img=document.getElementById('preview'), file=e.target.files[0];
+      if(file){
+        const r=new FileReader();
+        r.onload=e=>{ img.src=e.target.result; img.style.display='block'; };
+        r.readAsDataURL(file);
       }
     }
-
-    function saveOrder() {
-      const name = document.getElementById('name').value;
-      const phone = document.getElementById('phone').value;
-      const address = document.getElementById('address').value;
-      const pattern = document.getElementById('pattern').value;
-      const total = document.getElementById('total').value;
-      const deposit = document.getElementById('deposit').value;
-      const delivery = document.getElementById('delivery').value;
-      const status = document.getElementById('status').value;
-      const img = document.getElementById('preview').src;
-
-      if (!name || !phone || !pattern || !total) {
-        alert("กรอกข้อมูลให้ครบก่อนจ้า!");
-        return;
-      }
-
-      const order = {
-        id: Date.now(),
-        name,
-        phone,
-        address,
-        pattern,
-        total,
-        deposit,
-        delivery,
-        status,
-        image: img
-      };
-
-      let data = JSON.parse(localStorage.getItem("orders") || "[]");
-      data.push(order);
-      localStorage.setItem("orders", JSON.stringify(data));
-
-      alert("บันทึกเรียบร้อย!");
-      window.location.href = "orders.html";
+    function saveOrder(){
+      const f=['name','phone','address','pattern','total','deposit','delivery','status'];
+      let data={},ok=true;
+      f.forEach(id=>{
+        const val=document.getElementById('cus-'+id||id).value;
+        if(!val && (id==='name'|| id==='pattern'|| id==='total')) ok=false;
+        data[id]=val;
+      });
+      data.image=document.getElementById('preview').src;
+      data.id=Date.now(); data.date=new Date().toISOString();
+      if(!ok){alert('กรอกข้อมูลสำคัญให้ครบก่อน');return;}
+      let arr=JSON.parse(localStorage.getItem("orders")||"[]");
+      arr.push(data); localStorage.setItem("orders",JSON.stringify(arr));
+      alert('บันทึกเรียบร้อย'); window.location.href='orders.html';
     }
   </script>
-
 </body>
 </html>
