@@ -2,202 +2,83 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ELF Admin Pro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>แดชบอร์ด - ELF Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet">
   <style>
     body {
+      margin: 0;
       font-family: 'Sarabun', sans-serif;
-      margin: 0;
-      padding: 1.5rem;
-      background: #f9f9f9;
+      background-color: #f9f7f1;
+      color: #333;
     }
-    .dashboard {
-      display: flex;
-      justify-content: space-around;
-      background: #330a0a;
-      color: #fff3e0;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 2rem;
-      align-items: center;
-    }
-    .dash-item {
-      text-align: center;
-    }
-    .dash-item h2 {
-      margin: 0;
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-    .dash-item p {
-      margin: 0.3rem 0 0;
-      font-size: 0.9rem;
-      color: #f9f9f9aa;
-    }
-    .dash-percent {
-      font-weight: 700;
-    }
-    .dash-percent.positive { color: #8BC34A; }
-    .dash-percent.negative { color: #E53935; }
-
     header {
-      text-align: center;
-      margin-bottom: 2rem;
+      background-color: #5a0f0f;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    header .nav-link {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
+    header img {
+      height: 40px;
     }
-    header .nav-link a {
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      background: #0a7c0a;
-      color: #fff;
-      border-radius: 6px;
+    nav {
+      background-color: #fff4e5;
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    nav a {
+      color: #5a0f0f;
       text-decoration: none;
-      font-size: 0.9rem;
+      font-weight: bold;
     }
-
-    .container {
-      background: white;
-      max-width: 600px;
-      margin: auto;
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
       padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.05);
+    }
+    .card {
+      background: white;
+      padding: 1rem 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      margin-bottom: 1rem;
     }
     h1 {
-      text-align: center;
-      margin-bottom: 1rem;
-      font-size: 1.4rem;
+      color: #5a0f0f;
     }
-    label { font-weight: bold; display: block; margin-bottom: 0.5rem; }
-    input, textarea, select, button {
-      width: 100%; padding: 0.75rem; margin-bottom: 1.2rem;
-      border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;
-    }
-    button {
-      background: #0a7c0a; color: white; border: none; cursor: pointer;
-    }
-    #preview {
-      margin-bottom: 1rem;
-      max-height: 150px;
-      object-fit: contain;
-      display: none;
-    }
-
-    .footer { text-align: center; margin-top: 2rem; }
-    .footer a { text-decoration: none; color: #0a7c0a; font-weight: bold; }
   </style>
 </head>
 <body>
-
-  <!-- Dashboard บนสุด -->
-  <div class="dashboard">
-    <div class="dash-item">
-      <h2 id="dash-month">฿0</h2>
-      <p>ยอดขายเดือนนี้</p>
-    </div>
-    <div class="dash-item">
-      <h2 id="dash-goal">฿0</h2>
-      <p>เป้าหมายเดือนนี้</p>
-    </div>
-    <div class="dash-item">
-      <h2 id="dash-week" class="dash-percent">+0%</h2>
-      <p>เทียบยอด 7 วัน</p>
-    </div>
-  </div>
-
-  <!-- Header กับปุ่มไป Dashboard -->
   <header>
-    <div class="nav-link"><a href="dashboard.html">📊 Dashboard</a></div>
-    <img src="logo.png" alt="ELF Logo" />
+    <img src="/assets/logo-gold.png" alt="ELF Logo" />
+    <h1>ระบบหลังบ้าน ELF</h1>
   </header>
-
-  <!-- ฟอร์มกรอกออเดอร์ -->
-  <div class="container">
-    <h1>เพิ่มออเดอร์ลูกค้า</h1>
-    <label>ชื่อลูกค้า</label><input type="text" id="name"/>
-    <label>เบอร์โทร</label><input type="text" id="phone"/>
-    <label>ที่อยู่จัดส่ง</label><textarea id="address"></textarea>
-    <label>ลายผ้า / รายละเอียดสินค้า</label><input type="text" id="pattern"/>
-    <label>ยอดเต็ม (บาท)</label><input type="number" id="total"/>
-    <label>มัดจำแล้ว (บาท)</label><input type="number" id="deposit"/>
-    <label>วันนัดส่ง</label><input type="date" id="delivery"/>
-    <label>สถานะ</label>
-    <select id="status">
-      <option>รับออเดอร์แล้ว</option>
-      <option>ตัดผ้า</option>
-      <option>เย็บอยู่</option>
-      <option>แพ็กของ</option>
-      <option>ส่งแล้ว</option>
-    </select>
-    <label>แนบรูปสินค้า</label>
-    <input type="file" id="image" accept="image/*" onchange="previewImage(event)"/>
-    <img id="preview"/>
-    <button onclick="saveOrder()">บันทึกออเดอร์</button>
-  </div>
-
-  <div class="footer">
-    <p><a href="orders.html">📋 ดูออเดอร์ทั้งหมด</a></p>
-  </div>
-
-  <script>
-    // โหลดเป้าหมายจาก LocalStorage
-    const salesGoal = parseFloat(localStorage.getItem("salesGoal") || "50000");
-    document.getElementById("dash-goal").textContent = "฿" + salesGoal.toLocaleString();
-
-    // คำนวณยอด
-    const orders = JSON.parse(localStorage.getItem("orders")||"[]");
-    const now = new Date(); const thisMonth = now.getMonth();
-    const oneWeekAgo = new Date(); oneWeekAgo.setDate(now.getDate() - 7);
-    let monthTotal=0, weekTotal=0, lastWeek=0;
-    orders.forEach(o=>{
-      const d=new Date(o.date), t=parseFloat(o.total||0);
-      if(d.getMonth()===thisMonth) monthTotal+=t;
-      if(d>=oneWeekAgo) weekTotal+=t; else lastWeek+=t;
-    });
-    const pct = lastWeek>0?((weekTotal-lastWeek)/lastWeek*100).toFixed(1):0;
-    // แสดงบนหน้า
-    document.getElementById("dash-month").textContent = "฿"+monthTotal.toLocaleString();
-    const pctEl=document.getElementById("dash-week");
-    pctEl.textContent = (pct>=0?"+":"")+pct+"%";
-    pctEl.className = "dash-percent "+(pct>=0?"positive":"negative");
-
-    // ฟังก์ชันอื่น ๆ
-    function previewImage(e){
-      const img=document.getElementById('preview'), file=e.target.files[0];
-      if(file){
-        const r=new FileReader();
-        r.onload=e=>{ img.src=e.target.result; img.style.display='block'; };
-        r.readAsDataURL(file);
-      }
-    }
-    function saveOrder(){
-      const data = {
-        id: Date.now(),
-        date: new Date().toISOString(),
-        name: document.getElementById('name').value,
-        phone: document.getElementById('phone').value,
-        address: document.getElementById('address').value,
-        pattern: document.getElementById('pattern').value,
-        total: document.getElementById('total').value,
-        deposit: document.getElementById('deposit').value,
-        delivery: document.getElementById('delivery').value,
-        status: document.getElementById('status').value,
-        image: document.getElementById('preview').src || ''
-      };
-      if(!data.name||!data.pattern||!data.total) {
-        alert('กรอกข้อมูลสำคัญให้ครบก่อน'); return;
-      }
-      let arr=JSON.parse(localStorage.getItem("orders")||"[]");
-      arr.push(data);
-      localStorage.setItem("orders", JSON.stringify(arr));
-      alert('บันทึกเรียบร้อย');
-      window.location.href='orders.html';
-    }
-  </script>
+  <nav>
+    <a href="index.html">แดชบอร์ด</a>
+    <a href="create.html">เปิดบิลใหม่</a>
+    <a href="orders.html">ดูรายการทั้งหมด</a>
+    <a href="fabric.html">รายงานผ้า</a>
+    <a href="delivery.html">แจ้งเตือนวันส่ง</a>
+    <a href="print.html">พิมพ์ใบเสร็จ</a>
+  </nav>
+  <main>
+    <div class="card">
+      <h2>ภาพรวมระบบ</h2>
+      <p>แสดงจำนวนออเดอร์เดือนนี้ / ยอดขายรวม / รายการที่ยังไม่เย็บ / ผ้ารอเข้า</p>
+    </div>
+    <div class="card">
+      <h2>แจ้งเตือน</h2>
+      <ul>
+        <li>มีผ้าเข้าจาก CNS ที่ยังไม่ได้บันทึก</li>
+        <li>มีออเดอร์ครบกำหนดเย็บวันนี้</li>
+        <li>ลูกค้ารอแจ้งเลขส่งผ้า</li>
+      </ul>
+    </div>
+  </main>
 </body>
 </html>
