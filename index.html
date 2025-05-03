@@ -1,16 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>แดชบอร์ด - ELF Admin</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Sarabun&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body {
       margin: 0;
-      font-family: 'Playfair Display', serif;
-      background: linear-gradient(to bottom right, #faf7f1, #efe6d1);
+      font-family: 'Sarabun', sans-serif;
+      background: linear-gradient(to bottom right, #fbf8f2, #e9e0d0);
       color: #3b2c1e;
     }
     header {
@@ -19,6 +19,7 @@
       display: flex;
       align-items: center;
       gap: 1rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     header img {
       height: 60px;
@@ -26,6 +27,7 @@
     header h1 {
       color: #fff;
       font-size: 1.8rem;
+      font-family: 'Playfair Display', serif;
     }
     nav {
       background-color: #fff;
@@ -33,6 +35,8 @@
       gap: 1rem;
       padding: 1rem 2rem;
       border-bottom: 2px solid #e1cfc0;
+      justify-content: center;
+      flex-wrap: wrap;
     }
     nav a {
       color: #5a0f0f;
@@ -47,21 +51,42 @@
       padding: 2rem;
       max-width: 1200px;
       margin: auto;
+      display: grid;
+      gap: 2rem;
+    }
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
     }
     .card {
       background: white;
       padding: 2rem;
-      border-radius: 2rem;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-      margin-bottom: 2rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      transition: 0.3s;
     }
-    h2 {
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card h3 {
       color: #5a0f0f;
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    ul li {
+      font-size: 1.2rem;
       margin-bottom: 0.5rem;
+    }
+    .card .value {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #3b2c1e;
+    }
+    .card i {
+      font-size: 1.5rem;
+      color: #bfa373;
+      margin-right: 0.5rem;
+    }
+    .alert-box ul {
+      padding-left: 1.2rem;
+      margin: 0;
     }
   </style>
 </head>
@@ -79,12 +104,27 @@
     <a href="print.html">พิมพ์ใบเสร็จ</a>
   </nav>
   <main>
-    <div class="card">
-      <h2>ภาพรวมระบบ</h2>
-      <p>อัปเดตล่าสุดเมื่อ: 4/5/68 | ยอดสั่งซื้อเดือนนี้ 24 รายการ | รอยืนยันผ้าเข้า 5 ชุด</p>
+    <div class="dashboard">
+      <div class="card">
+        <h3><i class="fa-solid fa-receipt"></i> ออเดอร์เดือนนี้</h3>
+        <div class="value">24 รายการ</div>
+      </div>
+      <div class="card">
+        <h3><i class="fa-solid fa-scissors"></i> รอยืนยันเย็บ</h3>
+        <div class="value">5 ชุด</div>
+      </div>
+      <div class="card">
+        <h3><i class="fa-solid fa-box"></i> ผ้ารอเข้า</h3>
+        <div class="value">3 ชุด</div>
+      </div>
+      <div class="card">
+        <h3><i class="fa-solid fa-truck"></i> ส่งผ้าพรุ่งนี้</h3>
+        <div class="value">2 รายการ</div>
+      </div>
     </div>
-    <div class="card">
-      <h2>แจ้งเตือน</h2>
+
+    <div class="card alert-box">
+      <h3><i class="fa-solid fa-bell"></i> แจ้งเตือน</h3>
       <ul>
         <li>มีผ้าเข้าจาก CNS ที่ยังไม่ได้บันทึก</li>
         <li>มีออเดอร์ครบกำหนดเย็บวันนี้</li>
