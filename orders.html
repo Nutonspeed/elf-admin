@@ -12,12 +12,29 @@
       margin: 0;
       padding: 1rem;
     }
-
-    h1 {
+    header {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
+      position: relative;
     }
-
+    header .nav-link {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 1rem;
+    }
+    header .nav-link a {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      background: #0a7c0a;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    h1 {
+      margin: 0 0 1rem 0;
+    }
     .order-card {
       background: #fff;
       border-radius: 10px;
@@ -27,33 +44,27 @@
       display: flex;
       flex-direction: row;
     }
-
     .order-card img {
       width: 130px;
       height: 130px;
       object-fit: cover;
       border-right: 1px solid #eee;
     }
-
     .order-info {
       padding: 1rem;
       flex: 1;
     }
-
     .order-info h2 {
       margin: 0 0 0.3rem 0;
       font-size: 1.2rem;
     }
-
     .order-info p {
       margin: 0.2rem 0;
       font-size: 0.95rem;
     }
-
     .order-actions {
       margin-top: 1rem;
     }
-
     .order-actions a {
       text-decoration: none;
       padding: 0.6rem 1rem;
@@ -63,7 +74,6 @@
       margin-right: 0.5rem;
       font-size: 0.9rem;
     }
-
     .no-orders {
       text-align: center;
       margin-top: 4rem;
@@ -74,7 +84,10 @@
 </head>
 <body>
 
-  <h1>📋 รายการออเดอร์ทั้งหมด</h1>
+  <header>
+    <div class="nav-link"><a href="dashboard.html">📊 Dashboard</a></div>
+    <h1>📋 รายการออเดอร์ทั้งหมด</h1>
+  </header>
 
   <div id="orders-container"></div>
 
