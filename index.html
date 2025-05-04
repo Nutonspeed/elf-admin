@@ -2,82 +2,59 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>เปิดบิล | ELF</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>เปิดบิลใหม่ | ELF</title>
   <style>
-    body { font-family: 'Noto Serif Thai', serif; padding: 2rem; background: #fff8f8; }
-    label, input, textarea { display: block; margin-bottom: 0.5rem; width: 100%; max-width: 600px; }
-    button { background: #800020; color: white; padding: 0.7rem 1rem; border: none; border-radius: 6px; margin-top: 1rem; cursor: pointer; }
-    #linkBox { margin-top: 2rem; background: #f6e6e6; padding: 1rem; border-radius: 10px; display: none; }
-    #linkBox input { width: 100%; }
+    body { font-family: 'Noto Serif Thai', serif; background: #fff9f9; padding: 1rem; }
+    h1 { color: #800020; text-align: center; }
+    label { display: block; margin-top: 1rem; font-weight: bold; }
+    input, textarea, select, button {
+      width: 100%; max-width: 500px; display: block;
+      margin: 0.3rem auto 1rem; padding: 0.6rem; font-size: 1rem;
+    }
+    button { background: #800020; color: white; border: none; border-radius: 4px; cursor: pointer; }
   </style>
 </head>
 <body>
   <h1>เปิดบิลใหม่</h1>
-  <label>ชื่อลูกค้า <input id="name" required></label>
-  <label>เบอร์โทร <input id="phone"></label>
-  <label>ที่อยู่ <textarea id="address" rows="3"></textarea></label>
-  <label>ยอดเต็ม <input id="total" type="number"></label>
-  <label>มัดจำ <input id="deposit" type="number"></label>
-  <label>วันจัดส่ง <input id="delivery_date" type="date"></label>
-  <label>เลือกรูปลายผ้า <input id="image" type="file" accept="image/*"></label>
-  <button onclick="submitBill()">📦 สร้างบิล</button>
+  <form id="billForm">
+    <label>ชื่อลูกค้า</label>
+    <input type="text" id="name" placeholder="เช่น คุณน้ำฝน">
 
-  <div id="linkBox">
-    <p>🔗 ลิงก์บิลลูกค้า:</p>
-    <input id="billLink" readonly>
-    <button onclick="copyLink()">📋 คัดลอกลิงก์</button>
-    <a id="viewBtn" target="_blank"><button>👁‍🗨 เปิดดูบิลลูกค้า</button></a>
-  </div>
+    <label>เบอร์โทร</label>
+    <input type="text" id="phone">
+
+    <label>ที่อยู่</label>
+    <textarea id="address" rows="3"></textarea>
+
+    <label>ลายผ้า</label>
+    <input type="text" id="fabric" placeholder="เลือกลายจากหน้า fabric.html">
+
+    <label>ยอดเต็ม (บาท)</label>
+    <input type="number" id="total">
+
+    <label>มัดจำ (บาท)</label>
+    <input type="number" id="deposit">
+
+    <label>วันที่นัดส่ง</label>
+    <input type="date" id="delivery">
+
+    <button type="submit">💾 บันทึกบิล</button>
+  </form>
 
   <script>
-    const supabase = supabase.createClient(
-      'https://zhiflvlhamuijgxgeadr.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWZsdmxoYW11aWpneGdlYWRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYzNzUzNzIsImV4cCI6MjA2MTk1MTM3Mn0.ls2H6MOei5bDe07jTyiquGSQj-euw8rJH4643W2zKBk'
-    );
+    // เติมชื่อผ้าอัตโนมัติจาก fabric.html
+    const savedFabric = localStorage.getItem("selected_fabric");
+    if (savedFabric) {
+      document.getElementById("fabric").value = savedFabric;
+      localStorage.removeItem("selected_fabric");
+    }
 
-    let imageBase64 = "";
-
-    document.getElementById('image').addEventListener('change', (e) => {
-      const reader = new FileReader();
-      reader.onload = () => { imageBase64 = reader.result; }
-      reader.readAsDataURL(e.target.files[0]);
+    document.getElementById("billForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("ระบบบันทึกกำลังเชื่อมต่อ Supabase จริงเร็ว ๆ นี้");
     });
-
-    async function submitBill() {
-      const name = document.getElementById('name').value;
-      const phone = document.getElementById('phone').value;
-      const address = document.getElementById('address').value;
-      const total = +document.getElementById('total').value;
-      const deposit = +document.getElementById('deposit').value;
-      const remain = total - deposit;
-      const date = document.getElementById('delivery_date').value;
-
-      const { count } = await supabase.from('orders').select('*', { count: 'exact', head: true });
-      const order_number = `ORD-${(count + 1).toString().padStart(5, '0')}`;
-
-      const { error } = await supabase.from('orders').insert([{
-        name, phone, address, total, deposit, remain, delivery_date: date, image: imageBase64, status: 'รอมัดจำ', order_number
-      }]);
-
-      if (!error) {
-        const link = `https://elf-admin.vercel.app/bill.html?id=${order_number}`;
-        document.getElementById('billLink').value = link;
-        document.getElementById('viewBtn').href = link;
-        document.getElementById('linkBox').style.display = 'block';
-      } else {
-        alert('เกิดข้อผิดพลาดในการบันทึกบิล');
-      }
-    }
-
-    function copyLink() {
-      const linkInput = document.getElementById('billLink');
-      linkInput.select();
-      document.execCommand('copy');
-      alert('คัดลอกลิงก์แล้ว!');
-    }
   </script>
 </body>
 </html>
