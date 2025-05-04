@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>เปิดบิลใหม่ | ELF</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai&display=swap" rel="stylesheet">
   <style>
     body {
@@ -71,26 +72,29 @@
 </head>
 <body>
   <h1>เปิดบิลใหม่</h1>
-  <form>
+  <form onsubmit="saveOrder(event)">
     <label>ชื่อลูกค้า</label>
-    <input type="text" placeholder="ระบุชื่อเต็ม">
+    <input type="text" id="name">
 
     <label>เบอร์โทร</label>
-    <input type="text" placeholder="ระบุเบอร์โทร">
+    <input type="text" id="phone">
 
     <label>ที่อยู่จัดส่ง</label>
-    <textarea placeholder="กรอกที่อยู่จัดส่ง"></textarea>
+    <textarea id="address"></textarea>
 
     <label>แหล่งที่มาของผ้า</label>
-    <select>
-      <option>เลือก</option>
+    <select id="source">
+      <option value="">เลือก</option>
       <option>CNS Cargo</option>
       <option>Shopee</option>
       <option>อื่น ๆ</option>
     </select>
 
+    <label>Tracking หรือเลขอ้างอิง</label>
+    <input type="text" id="tracking">
+
     <label>วันที่จัดส่ง</label>
-    <input type="date">
+    <input type="date" id="delivery_date">
 
     <label>แนบรูปผ้าที่สั่ง</label>
     <input type="file" accept="image/*" onchange="previewImage(event)">
@@ -117,10 +121,18 @@
   </form>
 
   <script>
+    const supabase = supabase.createClient(
+      'https://zhiflvlhamuijgxgeadr.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWZsdmxoYW11aWpneGdlYWRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYzNzUzNzIsImV4cCI6MjA2MTk1MTM3Mn0.ls2H6MOei5bDe07jTyiquGSQj-euw8rJH4643W2zKBk'
+    );
+
+    let imageBase64 = '';
+
     function previewImage(event) {
       const reader = new FileReader();
       reader.onload = function () {
-        document.getElementById('output').src = reader.result;
+        imageBase64 = reader.result;
+        document.getElementById('output').src = imageBase64;
       };
       reader.readAsDataURL(event.target.files[0]);
     }
@@ -129,6 +141,60 @@
       const total = parseFloat(document.getElementById('total').value) || 0;
       const deposit = parseFloat(document.getElementById('deposit').value) || 0;
       document.getElementById('remain').value = total - deposit;
+    }
+
+    async function getNextOrderNumber() {
+      let { data, error } = await supabase
+        .from('orders')
+        .select('id', { count: 'exact' });
+      const count = data.length;
+      const num = String(count + 1).padStart(5, '0');
+      return `ORD-${num}`;
+    }
+
+    async function saveOrder(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const source = document.getElementById('source').value;
+      const tracking = document.getElementById('tracking').value;
+      const delivery_date = document.getElementById('delivery_date').value;
+      const total = parseFloat(document.getElementById('total').value) || 0;
+      const deposit = parseFloat(document.getElementById('deposit').value) || 0;
+      const remain = total - deposit;
+
+      if (!name || !phone || !address || !source || !delivery_date) {
+        alert('กรอกข้อมูลให้ครบก่อน');
+        return;
+      }
+
+      const order_number = await getNextOrderNumber();
+
+      const { data, error } = await supabase
+        .from('orders')
+        .insert([{
+          order_number,
+          name,
+          phone,
+          address,
+          source,
+          tracking,
+          delivery_date,
+          total,
+          deposit,
+          remain,
+          image: imageBase64,
+          status: 'รอมัดจำ'
+        }]);
+
+      if (error) {
+        alert('บันทึกไม่สำเร็จ');
+        console.error(error);
+      } else {
+        alert('สร้างบิลสำเร็จ!');
+        window.location.reload();
+      }
     }
   </script>
 </body>
