@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>อัปโหลดลายผ้า | ELF</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    body {
+      font-family: 'Noto Serif Thai', serif;
+      background: #fff9f9;
+      padding: 1rem;
+    }
+    h1 {
+      color: #800020;
+      text-align: center;
+    }
+    input, select, button {
+      font-size: 1rem;
+      padding: 0.6rem;
+      margin: 0.5rem 0;
+      width: 100%;
+      max-width: 500px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    progress {
+      width: 100%;
+      max-width: 500px;
+      margin: 1rem auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>อัปโหลดลายผ้าเข้าเว็บ</h1>
+  <input type="file" id="imageInput" multiple accept="image/*">
+  <input type="text" id="collection" placeholder="ชื่อหมวดหมู่ / คอลเลกชัน">
+  <progress id="uploadProgress" value="0" max="100" style="display:none;"></progress>
+  <button onclick="uploadImages()">อัปโหลดภาพ</button>
+
+  <script>
+    const supabase = supabase.createClient(
+      'https://zhiflvlhamuijgxgeadr.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWZsdmxoYW11aWpneGdlYWRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYzNzUzNzIsImV4cCI6MjA2MTk1MTM3Mn0.ls2H6MOei5bDe07jTyiquGSQj-euw8rJH4643W2zKBk'
+    );
+
+    async function uploadImages() {
+      const files = document.getElementById("imageInput").files;
+      const collection = document.getElementById("collection").value.trim() || "ไม่ระบุ";
+      const progress = document.getElementById("uploadProgress");
+
+      if (files.length === 0) return alert("กรุณาเลือกภาพอย่างน้อย 1 รูป");
+
+      progress.style.display = "block";
+      progress.value = 0;
+      progress.max = files.length;
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const resized = await resizeImage(file, 1200);
+        const fileName = Date.now() + "-" + file.name.replace(/\s/g, '_');
+        const { data, error } = await supabase.storage.from("fabrics").upload(fileName, resized, {
+          contentType: file.type,
+          upsert: false
+        });
+
+        if (!error) {
+          const url = `https://zhiflvlhamuijgxgeadr.supabase.co/storage/v1/object/public/fabrics/${fileName}`;
+          await supabase.from("fabrics").insert({ name: file.name, image: url, collection });
+        }
+
+        progress.value = i + 1;
+      }
+
+      alert("อัปโหลดเรียบร้อยแล้ว!");
+      location.reload();
+    }
+
+    function resizeImage(file, maxWidth) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const scale = maxWidth / img.width;
+            canvas.width = maxWidth;
+            canvas.height = img.height * scale;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob(resolve, file.type);
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  </script>
+</body>
+</html>
