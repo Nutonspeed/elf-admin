@@ -1,2 +1,135 @@
 <!DOCTYPE html>
-<html><head><title>ELF Admin</title></head><body><h1>Welcome to ELF</h1><a href='create.html'>เปิดบิล</a></body></html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เปิดบิลใหม่ | ELF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Serif Thai', serif;
+      background-color: #fdf6f6;
+      margin: 0;
+      padding: 2rem;
+      color: #400010;
+    }
+    h1 {
+      text-align: center;
+      color: #800020;
+    }
+    form {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+      font-weight: bold;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    .flex-row {
+      display: flex;
+      gap: 1rem;
+    }
+    .flex-row > div {
+      flex: 1;
+    }
+    .preview {
+      margin-top: 1rem;
+    }
+    .preview img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+    button {
+      margin-top: 2rem;
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.2rem;
+      background: #800020;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #a52a2a;
+    }
+  </style>
+</head>
+<body>
+  <h1>เปิดบิลใหม่</h1>
+  <form>
+    <label>ชื่อลูกค้า</label>
+    <input type="text" placeholder="ระบุชื่อเต็ม">
+
+    <label>เบอร์โทร</label>
+    <input type="text" placeholder="ระบุเบอร์โทร">
+
+    <label>ที่อยู่จัดส่ง</label>
+    <textarea placeholder="กรอกที่อยู่จัดส่ง"></textarea>
+
+    <label>แหล่งที่มาของผ้า</label>
+    <select>
+      <option>เลือก</option>
+      <option>CNS Cargo</option>
+      <option>Shopee</option>
+      <option>อื่น ๆ</option>
+    </select>
+
+    <label>วันที่จัดส่ง</label>
+    <input type="date">
+
+    <label>แนบรูปผ้าที่สั่ง</label>
+    <input type="file" accept="image/*" onchange="previewImage(event)">
+    <div class="preview">
+      <img id="output" />
+    </div>
+
+    <div class="flex-row">
+      <div>
+        <label>ยอดเต็ม</label>
+        <input type="number" id="total" oninput="calcRemain()">
+      </div>
+      <div>
+        <label>ยอดมัดจำ</label>
+        <input type="number" id="deposit" oninput="calcRemain()">
+      </div>
+      <div>
+        <label>ยอดค้าง</label>
+        <input type="number" id="remain" disabled>
+      </div>
+    </div>
+
+    <button type="submit">📦 สร้างบิล</button>
+  </form>
+
+  <script>
+    function previewImage(event) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        document.getElementById('output').src = reader.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function calcRemain() {
+      const total = parseFloat(document.getElementById('total').value) || 0;
+      const deposit = parseFloat(document.getElementById('deposit').value) || 0;
+      document.getElementById('remain').value = total - deposit;
+    }
+  </script>
+</body>
+</html>
