@@ -1,101 +1,116 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>รายการบิล - ELF</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>รายการบิล | ELF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Tahoma', sans-serif;
-      background: #f6f6f6;
-      margin: 0;
-      padding: 20px;
+      font-family: 'Noto Serif Thai', serif;
+      background-color: #fef9f9;
+      padding: 2rem;
+      color: #400010;
     }
     h1 {
-      color: #800000;
+      text-align: center;
+      color: #800020;
     }
-    .filters, .table-container {
-      max-width: 1000px;
-      margin: auto;
+    nav {
+      margin-bottom: 1rem;
+      text-align: center;
     }
-    .filters input, .filters select {
-      padding: 8px;
-      margin: 5px;
-      font-size: 16px;
+    nav a {
+      display: inline-block;
+      margin: 0 0.5rem;
+      color: #800020;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
-      margin-top: 20px;
+      margin-top: 2rem;
     }
     th, td {
-      padding: 12px;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
+      padding: 0.75rem;
       text-align: left;
     }
     th {
-      background: #ddd;
+      background-color: #800020;
+      color: white;
     }
-    .status-paid {
-      color: green;
-      font-weight: bold;
+    tr:nth-child(even) {
+      background-color: #f8eaea;
     }
-    .status-pending {
-      color: red;
-      font-weight: bold;
+    .status {
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      display: inline-block;
     }
-    .actions button {
-      padding: 5px 10px;
-      margin-right: 5px;
-    }
+    .status.waiting { background: #f1c40f; color: black; }
+    .status.paid { background: #2ecc71; color: white; }
+    .status.done { background: #34495e; color: white; }
   </style>
 </head>
 <body>
   <h1>รายการบิลทั้งหมด</h1>
 
-  <div class="filters">
-    <input type="text" placeholder="ค้นหาชื่อลูกค้า..." />
-    <select>
-      <option>ทั้งหมด</option>
-      <option>มัดจำแล้ว</option>
-      <option>รอตัด</option>
-      <option>กำลังจัดส่ง</option>
-      <option>เสร็จสิ้น</option>
-    </select>
-    <input type="date" />
-  </div>
+  <nav>
+    <a href="index.html">เปิดบิลใหม่</a>
+    <a href="dashboard.html">แดชบอร์ด</a>
+    <a href="orders.html">รายการบิล</a>
+    <a href="comm.html">ค่าคอมทีม</a>
+    <a href="documents.html">แนบเอกสาร</a>
+  </nav>
 
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>วันที่</th>
-          <th>ชื่อลูกค้า</th>
-          <th>ยอด</th>
-          <th>สถานะ</th>
-          <th>ผู้ทำรายการ</th>
-          <th>ดูสลิป</th>
-          <th>พิมพ์</th>
-          <th>แก้ไข</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>2025-05-04</td>
-          <td>คุณลฎาภา</td>
-          <td>฿3,500</td>
-          <td class="status-paid">มัดจำแล้ว</td>
-          <td>admin</td>
-          <td><button>ดู</button></td>
-          <td><button>พิมพ์</button></td>
-          <td><button>แก้ไข</button></td>
-        </tr>
-        <!-- เพิ่มรายการอื่นๆ จากฐานข้อมูลจริง -->
-      </tbody>
-    </table>
-  </div>
-
+  <table>
+    <thead>
+      <tr>
+        <th>เลขบิล</th>
+        <th>ชื่อลูกค้า</th>
+        <th>ยอดเต็ม</th>
+        <th>มัดจำ</th>
+        <th>ค้าง</th>
+        <th>สถานะ</th>
+        <th>ดูรูป</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ORD-00001</td>
+        <td>คุณนุ่น</td>
+        <td>9,000</td>
+        <td>3,000</td>
+        <td>6,000</td>
+        <td><span class="status waiting">รอมัดจำ</span></td>
+        <td><a href="#">ดู</a></td>
+      </tr>
+      <tr>
+        <td>ORD-00002</td>
+        <td>คุณโอ๋</td>
+        <td>6,500</td>
+        <td>6,500</td>
+        <td>0</td>
+        <td><span class="status paid">มัดจำแล้ว</span></td>
+        <td><a href="#">ดู</a></td>
+      </tr>
+      <tr>
+        <td>ORD-00003</td>
+        <td>คุณพลอย</td>
+        <td>8,800</td>
+        <td>8,800</td>
+        <td>0</td>
+        <td><span class="status done">ส่งแล้ว</span></td>
+        <td><a href="#">ดู</a></td>
+      </tr>
+    </tbody>
+  </table>
 </body>
 </html>
+
