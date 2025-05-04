@@ -1,125 +1,101 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>รายการออเดอร์ - ELF Admin</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>รายการบิล - ELF</title>
   <style>
     body {
-      font-family: 'Sarabun', sans-serif;
-      background: #f7f7f7;
+      font-family: 'Tahoma', sans-serif;
+      background: #f6f6f6;
       margin: 0;
-      padding: 1rem;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 1rem;
-      position: relative;
-    }
-    header .nav-link {
-      position: absolute;
-      top: 0;
-      right: 0;
-      margin: 1rem;
-    }
-    header .nav-link a {
-      display: inline-block;
-      padding: 0.4rem 0.8rem;
-      background: #0a7c0a;
-      color: #fff;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 0.9rem;
+      padding: 20px;
     }
     h1 {
-      margin: 0 0 1rem 0;
+      color: #800000;
     }
-    .order-card {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      margin-bottom: 1.5rem;
-      overflow: hidden;
-      display: flex;
-      flex-direction: row;
+    .filters, .table-container {
+      max-width: 1000px;
+      margin: auto;
     }
-    .order-card img {
-      width: 130px;
-      height: 130px;
-      object-fit: cover;
-      border-right: 1px solid #eee;
+    .filters input, .filters select {
+      padding: 8px;
+      margin: 5px;
+      font-size: 16px;
     }
-    .order-info {
-      padding: 1rem;
-      flex: 1;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      margin-top: 20px;
     }
-    .order-info h2 {
-      margin: 0 0 0.3rem 0;
-      font-size: 1.2rem;
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: left;
     }
-    .order-info p {
-      margin: 0.2rem 0;
-      font-size: 0.95rem;
+    th {
+      background: #ddd;
     }
-    .order-actions {
-      margin-top: 1rem;
+    .status-paid {
+      color: green;
+      font-weight: bold;
     }
-    .order-actions a {
-      text-decoration: none;
-      padding: 0.6rem 1rem;
-      background: #0a7c0a;
-      color: white;
-      border-radius: 6px;
-      margin-right: 0.5rem;
-      font-size: 0.9rem;
+    .status-pending {
+      color: red;
+      font-weight: bold;
     }
-    .no-orders {
-      text-align: center;
-      margin-top: 4rem;
-      font-size: 1.1rem;
-      color: #999;
+    .actions button {
+      padding: 5px 10px;
+      margin-right: 5px;
     }
   </style>
 </head>
 <body>
+  <h1>รายการบิลทั้งหมด</h1>
 
-  <header>
-    <div class="nav-link"><a href="dashboard.html">📊 Dashboard</a></div>
-    <h1>📋 รายการออเดอร์ทั้งหมด</h1>
-  </header>
+  <div class="filters">
+    <input type="text" placeholder="ค้นหาชื่อลูกค้า..." />
+    <select>
+      <option>ทั้งหมด</option>
+      <option>มัดจำแล้ว</option>
+      <option>รอตัด</option>
+      <option>กำลังจัดส่ง</option>
+      <option>เสร็จสิ้น</option>
+    </select>
+    <input type="date" />
+  </div>
 
-  <div id="orders-container"></div>
-
-  <script>
-    const orders = JSON.parse(localStorage.getItem("orders") || "[]");
-    const container = document.getElementById("orders-container");
-
-    if (orders.length === 0) {
-      container.innerHTML = `<p class="no-orders">ยังไม่มีรายการออเดอร์</p>`;
-    } else {
-      orders.reverse().forEach(order => {
-        const remain = parseFloat(order.total) - parseFloat(order.deposit || 0);
-        const html = `
-        <div class="order-card">
-          <img src="${order.image || 'https://via.placeholder.com/130'}" alt="รูปสินค้า">
-          <div class="order-info">
-            <h2>${order.name} (${order.pattern})</h2>
-            <p>📱 ${order.phone}</p>
-            <p>📦 ส่ง: ${order.delivery || '-'}</p>
-            <p>💰 ยอดเต็ม: ฿${order.total} | มัดจำ: ฿${order.deposit || 0}</p>
-            <p style="color:${remain > 0 ? 'red' : 'green'}">💸 ค้างชำระ: ฿${remain}</p>
-            <p>📌 สถานะ: ${order.status}</p>
-            <div class="order-actions">
-              <a href="print.html?id=${order.id}">พิมพ์ใบปะหน้า</a>
-            </div>
-          </div>
-        </div>
-        `;
-        container.innerHTML += html;
-      });
-    }
-  </script>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>วันที่</th>
+          <th>ชื่อลูกค้า</th>
+          <th>ยอด</th>
+          <th>สถานะ</th>
+          <th>ผู้ทำรายการ</th>
+          <th>ดูสลิป</th>
+          <th>พิมพ์</th>
+          <th>แก้ไข</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2025-05-04</td>
+          <td>คุณลฎาภา</td>
+          <td>฿3,500</td>
+          <td class="status-paid">มัดจำแล้ว</td>
+          <td>admin</td>
+          <td><button>ดู</button></td>
+          <td><button>พิมพ์</button></td>
+          <td><button>แก้ไข</button></td>
+        </tr>
+        <!-- เพิ่มรายการอื่นๆ จากฐานข้อมูลจริง -->
+      </tbody>
+    </table>
+  </div>
 
 </body>
 </html>
