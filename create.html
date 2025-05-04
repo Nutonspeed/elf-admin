@@ -1,67 +1,117 @@
+
 <!DOCTYPE html>
 <html lang="th">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>เปิดบิลใหม่ - ELF</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-[#fefcf9] text-[#3a3a3a] p-4">
-    <div class="max-w-3xl mx-auto bg-white shadow-xl rounded-2xl p-6">
-      <h1 class="text-2xl font-serif text-[#7c0a02] mb-6">เปิดบิลใหม่</h1>
+<head>
+  <meta charset="UTF-8">
+  <title>เปิดบิลใหม่ - ELF</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      background-color: #f7f3ec;
+    }
+    h1 {
+      color: #5a0f0f;
+    }
+    form {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 1.5rem;
+      background: #5a0f0f;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+    .success {
+      background: #e6fff2;
+      color: #217a4b;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-top: 1rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>เปิดบิลใหม่</h1>
+  <form id="billForm">
+    <label>ชื่อลูกค้า <input type="text" id="customer" required></label>
+    <label>เบอร์โทร <input type="text" id="phone"></label>
+    <label>วันที่สั่งซื้อ <input type="date" id="orderDate" required></label>
+    <label>ยอดรวม (บาท) <input type="number" id="amount" required></label>
+    <label>สถานะ
+      <select id="status">
+        <option value="มัดจำแล้ว">มัดจำแล้ว</option>
+        <option value="รอยืนยันผ้า">รอยืนยันผ้า</option>
+        <option value="เย็บแล้ว">เย็บแล้ว</option>
+      </select>
+    </label>
+    <label>รายการผ้า <textarea id="fabric" rows="3"></textarea></label>
+    <label>เลข Tracking / CNS <input type="text" id="tracking"></label>
+    <label>แนบสลิป <input type="file" id="slip"></label>
+    <button type="submit">บันทึกบิล</button>
+    <div id="result" class="success" style="display:none;">บันทึกเรียบร้อยแล้ว!</div>
+  </form>
 
-      <!-- กลุ่ม 1: ลูกค้า -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <input type="text" placeholder="ชื่อลูกค้า" class="rounded-xl border p-3" />
-        <input type="text" placeholder="เบอร์โทร" class="rounded-xl border p-3" />
-        <input type="date" placeholder="วันที่เปิดบิล" class="rounded-xl border p-3" />
-      </div>
+  <script>
+    const supabase = supabase.createClient("https://YOUR-PROJECT.supabase.co", "YOUR-ANON-KEY");
 
-      <!-- กลุ่ม 2: รายการผ้า -->
-      <div class="mb-6">
-        <label class="block mb-1 font-semibold">รายการผ้า</label>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input type="text" placeholder="ชื่อผ้า / โค้ดผ้า" class="rounded-xl border p-3" />
-          <select class="rounded-xl border p-3">
-            <option>เลือกแหล่งผ้า</option>
-            <option>ในร้าน</option>
-            <option>Shopee</option>
-            <option>สั่งนอก</option>
-          </select>
-          <input type="number" placeholder="จำนวนผืน" class="rounded-xl border p-3" />
-        </div>
-      </div>
+    const form = document.getElementById('billForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const customer = document.getElementById('customer').value;
+      const phone = document.getElementById('phone').value;
+      const orderDate = document.getElementById('orderDate').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      const status = document.getElementById('status').value;
+      const fabric = document.getElementById('fabric').value;
+      const tracking = document.getElementById('tracking').value;
 
-      <!-- กลุ่ม 3: ยอดรวม & มัดจำ -->
-      <div class="mb-6">
-        <label class="block mb-1 font-semibold">ยอดรวม</label>
-        <input type="number" placeholder="ใส่ยอดรวม (บาท)" class="rounded-xl border p-3 w-full mb-3" />
-        <div class="flex gap-2">
-          <input type="number" placeholder="มัดจำ (บาท)" class="rounded-xl border p-3 w-full" />
-          <button class="bg-[#7c0a02] text-white px-4 py-2 rounded-xl">คำนวณ %</button>
-        </div>
-      </div>
+      const fileInput = document.getElementById('slip');
+      let slip_url = null;
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const { data, error } = await supabase.storage.from('slips').upload(`slip_${Date.now()}`, file);
+        if (!error) {
+          const { publicURL } = supabase.storage.from('slips').getPublicUrl(data.path);
+          slip_url = publicURL;
+        }
+      }
 
-      <!-- กลุ่ม 4: แนบสลิป -->
-      <div class="mb-6">
-        <label class="block mb-1 font-semibold">แนบสลิปมัดจำ</label>
-        <input type="file" class="rounded-xl border p-3 w-full" />
-      </div>
+      const { error } = await supabase.from('orders').insert([{
+        customer, phone, orderDate, amount, status, fabric, tracking, slip: slip_url
+      }]);
 
-      <!-- กลุ่ม 5: วันผ้าเข้า & วันจัดส่ง -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <input type="date" placeholder="วันที่ผ้าเข้าไทย" class="rounded-xl border p-3" />
-        <input type="date" placeholder="วันนัดส่งสินค้า" class="rounded-xl border p-3" />
-      </div>
-
-      <!-- กลุ่ม 6: หมายเหตุ -->
-      <textarea placeholder="หมายเหตุเพิ่มเติม" class="rounded-xl border p-3 w-full mb-6" rows="3"></textarea>
-
-      <!-- ปุ่ม -->
-      <div class="flex justify-end gap-4">
-        <button class="border border-[#7c0a02] text-[#7c0a02] px-4 py-2 rounded-xl">พิมพ์บิล</button>
-        <button class="bg-[#7c0a02] text-white px-4 py-2 rounded-xl">บันทึกบิล</button>
-      </div>
-    </div>
-  </body>
+      if (!error) {
+        document.getElementById('result').style.display = 'block';
+        form.reset();
+      } else {
+        alert('เกิดข้อผิดพลาดในการบันทึกบิล');
+        console.error(error);
+      }
+    });
+  </script>
+</body>
 </html>
