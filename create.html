@@ -1,2 +1,74 @@
+
 <!DOCTYPE html>
-<html><head><title>Create Bill</title></head><body><h1>เปิดบิลจริง</h1><script src='config.js'></script></body></html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>เปิดบิลใหม่ - ELF</title>
+  <style>
+    body {
+      font-family: 'Tahoma', sans-serif;
+      background-color: #fdfcf8;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #660000;
+    }
+    form {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    button {
+      background-color: #800000;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>เปิดบิลใหม่</h1>
+  <form>
+    <label>ชื่อลูกค้า</label>
+    <input type="text" placeholder="กรอกชื่อลูกค้า" />
+
+    <label>เบอร์โทร</label>
+    <input type="text" placeholder="เบอร์โทร" />
+
+    <label>รายการสินค้า</label>
+    <input type="text" placeholder="ปลอกหมอน / ผ้าคลุม / หมอนอิง" />
+
+    <label>ยอดรวม</label>
+    <input type="number" placeholder="บาท" />
+
+    <label>ขนส่ง</label>
+    <select>
+      <option value="normal">ส่งธรรมดา</option>
+      <option value="cod">เก็บเงินปลายทาง (COD)</option>
+    </select>
+
+    <label>Tracking No.</label>
+    <input type="text" placeholder="เลขแทรค" />
+
+    <label>หมายเหตุ</label>
+    <input type="text" placeholder="หมายเหตุเพิ่มเติม" />
+
+    <button type="submit">บันทึกบิล</button>
+  </form>
+</body>
+</html>
