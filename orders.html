@@ -1,45 +1,55 @@
-<script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
-  const SUPABASE_URL = 'https://zhiflvlhamuijgxgeadr.supabase.co'
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWZsdmxoYW11aWpneGdlYWRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYzNzUzNzIsImV4cCI6MjA2MTk1MTM3Mn0.ls2H6MOei5bDe07jTyiquGSQj-euw8rJH4643W2zKBk'
-
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
-
-  async function loadOrders() {
-    const { data, error } = await supabase
-      .from('orders')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (error) {
-      console.error('โหลดข้อมูลผิดพลาด:', error)
-      return
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>รายการออเดอร์ - ELF Admin</title>
+  <style>
+    body{font-family:'Sarabun',sans-serif;background:#2e0f0f;color:#eee;padding:1rem;}
+    header{text-align:center;margin-bottom:1rem;}
+    header img{height:40px;}
+    table{width:100%;border-collapse:collapse;background:#3d1818;}
+    th,td{border:1px solid #663333;padding:.5rem;}
+    th{background:#5c1c1c;color:#ffd;}
+    .status.green{color:#8f8}.status.yellow{color:#ff8}.status.red{color:#f88}
+    .actions{display:flex;gap:4px;flex-wrap:wrap;}
+    @media(max-width:768px){table,thead,tbody,th,td,tr{display:block;}td{padding:.5rem 0;}td::before{font-weight:bold;display:block}}
+  </style>
+</head>
+<body>
+  <header>
+    <img src="elf-logo.png" alt="ELF Logo"/>
+    <h1>รายการออเดอร์</h1>
+  </header>
+  <table>
+    <thead><tr>
+      <th>วันที่</th><th>ลูกค้า</th><th>ยอดรวม</th><th>สถานะ</th><th>สลิป</th><th>จัดการ</th>
+    </tr></thead>
+    <tbody id="orderBody"></tbody>
+  </table>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+    import { SUPABASE_URL, SUPABASE_KEY } from './config.js'
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+    async function loadOrders(){
+      const {data} = await supabase.from('orders').select('*').order('created_at',{ascending:false})
+      const tbody=document.getElementById('orderBody'); tbody.innerHTML=''
+      data.forEach(o=>{
+        const tr=document.createElement('tr')
+        tr.innerHTML=`
+          <td>${new Date(o.created_at).toLocaleDateString('th-TH')}</td>
+          <td>${o.customer||'-'}</td>
+          <td>${o.amount!=null?Number(o.amount).toLocaleString():'-'}</td>
+          <td class="status ${o.status==='มัดจำแล้ว'?'green':o.status==='พร้อมส่ง'?'yellow':'red'}">${o.status||'-'}</td>
+          <td>${o.slip_url?`<a href="${o.slip_url}" target="_blank">ดูสลิป</a>`:'-'}</td>
+          <td class="actions">
+            <button onclick="alert('พิมพ์บิล ${o.customer}')">พิมพ์</button>
+            <button onclick="alert('แก้ไข ${o.customer}')">แก้ไข</button>
+          </td>`
+        tbody.appendChild(tr)
+      })
     }
-
-    const tbody = document.getElementById('orderBody')
-    tbody.innerHTML = ''
-
-    data.forEach(order => {
-      const tr = document.createElement('tr')
-      tr.innerHTML = `
-        <td>${new Date(order.created_at).toLocaleDateString('th-TH')}</td>
-        <td>${order.customer || '-'}</td>
-        <td>${order.amount != null ? (+order.amount).toLocaleString() : '-'}</td>
-        <td class="status ${order.status === 'มัดจำแล้ว' ? 'green' : order.status === 'พร้อมส่ง' ? 'yellow' : 'red'}">
-            ${order.status || '-'}
-        </td>
-        <td>
-          ${order.slip_url ? `<a href="${order.slip_url}" target="_blank">ดูสลิป</a>` : '-'}
-        </td>
-        <td class="actions">
-          <button onclick="alert('แก้ไข ${order.customer}')">แก้ไข</button>
-          <button onclick="alert('พิมพ์บิล ${order.customer}')">พิมพ์</button>
-        </td>
-      `
-      tbody.appendChild(tr)
-    })
-  }
-
-  loadOrders()
-</script>
+    loadOrders()
+  </script>
+</body>
+</html>
