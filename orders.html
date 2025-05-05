@@ -12,6 +12,7 @@
     a { color: #00ccff; }
     button { padding: 6px 12px; margin: 2px; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <h1>รายการออเดอร์</h1>
@@ -31,33 +32,36 @@
     </tbody>
   </table>
 
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-    const supabase = createClient(
+  <script>
+    const supabase = window.supabase.createClient(
       'https://zhiflvlhamuijgxgtdlf.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWZsdmxoYW11aWpneHRnZGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ2NzY1MDUsImV4cCI6MjAyOTI1MjUwNX0.5W_gzDeT2bwL1vdRSU_6X6r_A_dhT1mQdCDmWwbkgVY'
     );
 
-    const { data, error } = await supabase.from('orders').select('*').order('id', { ascending: false })
-    const tbody = document.getElementById('orders-body')
-    tbody.innerHTML = ''
+    async function loadOrders() {
+      const { data, error } = await supabase.from('orders').select('*').order('id', { ascending: false });
+      const tbody = document.getElementById('orders-body');
+      tbody.innerHTML = '';
 
-    if (error) {
-      tbody.innerHTML = `<tr><td colspan="6" style="color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>`
-    } else {
-      data.forEach(row => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${new Date(row.created_at).toLocaleDateString()}</td>
-          <td>${row.customer || '-'}</td>
-          <td>${row.amount || '-'}</td>
-          <td style="color: ${row.status === 'มัดจำแล้ว' ? 'lime' : 'orange'};">${row.status || '-'}</td>
-          <td>${row.slip_url ? `<a href="${row.slip_url}" target="_blank">ดูสลิป</a>` : '-'}</td>
-          <td>${row.note || '-'}</td>
-        `;
-        tbody.appendChild(tr);
-      })
+      if (error) {
+        tbody.innerHTML = `<tr><td colspan="6" style="color:red;">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>`;
+      } else {
+        data.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${new Date(row.created_at).toLocaleDateString()}</td>
+            <td>${row.customer || '-'}</td>
+            <td>${row.amount || '-'}</td>
+            <td style="color: ${row.status === 'มัดจำแล้ว' ? 'lime' : 'orange'};">${row.status || '-'}</td>
+            <td>${row.slip_url ? `<a href="${row.slip_url}" target="_blank">ดูสลิป</a>` : '-'}</td>
+            <td>${row.note || '-'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
     }
+
+    loadOrders();
   </script>
 </body>
 </html>
