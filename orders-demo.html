@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELF Orders Demo</title>
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: #fdfaf5;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: white;
+      padding: 12px 20px;
+      border-bottom: 2px solid #80002020;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header img {
+      height: 50px;
+    }
+    @media (max-width: 600px) {
+      header img {
+        height: 75px;
+      }
+    }
+    .container {
+      padding: 20px;
+    }
+    h1 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    .order-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-left: 6px solid #800020;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      padding: 12px 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .order-card h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+    .order-card p {
+      margin: 4px 0;
+      font-size: 14px;
+    }
+    .btn {
+      display: inline-block;
+      background: #800020;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    .open-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #800020;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      font-size: 16px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://elf-admin.vercel.app/logo-gold.png" alt="ELF Logo" />
+  </header>
+  <div class="container">
+    <h1>รายการสั่งผ้า (DEMO)</h1>
+
+    <div class="order-card">
+      <h2>คุณพิมพ์ใจ • มัดจำแล้ว</h2>
+      <p>วันที่: 5 พ.ค. 2568</p>
+      <p>ยอดรวม: 4,250 บาท</p>
+      <a class="btn" href="#">ดูสลิป</a>
+    </div>
+
+    <div class="order-card">
+      <h2>คุณมะลิ • รอยืนยัน</h2>
+      <p>วันที่: 4 พ.ค. 2568</p>
+      <p>ยอดรวม: 2,900 บาท</p>
+      <a class="btn" href="#">แนบสลิป</a>
+    </div>
+
+    <div class="order-card">
+      <h2>คุณอารีย์ • ส่งแล้ว</h2>
+      <p>วันที่: 3 พ.ค. 2568</p>
+      <p>ยอดรวม: 3,700 บาท</p>
+      <a class="btn" href="#">พิมพ์บิล</a>
+    </div>
+  </div>
+
+  <button class="open-btn">+ เปิดบิลใหม่</button>
+</body>
+</html>
