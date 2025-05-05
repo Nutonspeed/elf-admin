@@ -23,7 +23,7 @@
     }
     .fabric-img {
       width: 100%;
-      height: 200px;
+      height: 220px;
       object-fit: cover;
     }
     .top-pick {
@@ -40,24 +40,40 @@
 </head>
 <body>
   <div class="container py-4">
-    <h2 class="mb-4 text-center">เลือกลายผ้าที่คุณชอบ</h2>
+    <h2 class="mb-4 text-center">Sweet Hug Collection</h2>
     <div id="fabric-list" class="row g-3">
-      <!-- รูปลายผ้าจะถูกวางที่นี่อัตโนมัติ -->
+      <!-- รูปลายผ้าแสดงตรงนี้ -->
     </div>
   </div>
 
   <script>
-    // ตัวอย่างข้อมูล (เปลี่ยนภายหลังเป็นดึงจาก Supabase)
     const fabricData = [
-      { name: "Sweet Hug-01", collection: "Sweet Hug", image: "https://via.placeholder.com/300x200?text=Sweet+Hug+01", sendCount: 10 },
-      { name: "Sweet Hug-02", collection: "Sweet Hug", image: "https://via.placeholder.com/300x200?text=Sweet+Hug+02", sendCount: 3 },
-      { name: "Modern Mood-01", collection: "Modern Mood", image: "https://via.placeholder.com/300x200?text=Modern+Mood+01", sendCount: 8 }
+      {
+        name: "Sweet Hug-01",
+        image: "/mnt/data/O1CN01bgiULQ1PfajTHL2Yu_!!2215796941868-0-cib1738648138316.jpg",
+        sendCount: 10
+      },
+      {
+        name: "Sweet Hug-02",
+        image: "/mnt/data/O1CN01FsIo981PfajKGx4H9_!!2215796941868-0-cib1738648138673.jpg",
+        sendCount: 8
+      },
+      {
+        name: "Sweet Hug-03",
+        image: "/mnt/data/O1CN01gGPix81PfajMrYBPu_!!2215796941868-0-cib1738648138520.jpg",
+        sendCount: 5
+      },
+      {
+        name: "Sweet Hug-04",
+        image: "/mnt/data/O1CN01Gh2mjJ1PfajJ4l5OM_!!2215796941868-0-cib1738648138539.jpg",
+        sendCount: 3
+      }
     ];
 
     const fabricList = document.getElementById("fabric-list");
     fabricData.forEach((fabric) => {
       const col = document.createElement("div");
-      col.className = "col-12 col-sm-6 col-md-4";
+      col.className = "col-12 col-sm-6 col-md-3";
 
       const card = document.createElement("div");
       card.className = "fabric-card position-relative";
