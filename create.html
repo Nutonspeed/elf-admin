@@ -12,7 +12,13 @@
     .error { color: red; margin-top: 20px; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
+  <script>
+    const { createClient } = supabase;
+    const supabaseClient = createClient(
+      'https://zhiflvlhamuijgxgtdlf.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWZ2bGhtYXVpamd4Z3RkbGYiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTcxNDYxNjUwMiwiZXhwIjoyMDY5OTkyNTAyfQ.nWwaEyhVGkczv2W77cMIXW90NGuXCIKHX90_X3nfhPw'
+    );
+  </script>
 </head>
 <body>
   <h1>เปิดบิลใหม่</h1>
@@ -42,7 +48,7 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(form).entries());
-      const { error } = await supabase.from('orders').insert([{ ...data }]);
+      const { error } = await supabaseClient.from('orders').insert([{ ...data }]);
       if (error) {
         successMsg.style.display = 'none';
         errorMsg.textContent = '❌ เกิดข้อผิดพลาด: ' + error.message;
