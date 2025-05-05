@@ -1,20 +1,28 @@
-<!-- orders.html ระบบ ELF ฉบับจริง -->
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>รายการบิล | ELF</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai&display=swap" rel="stylesheet" />
+  <title>รายการออเดอร์ - ELF Admin</title>
   <style>
     body {
-      font-family: 'Noto Serif Thai', serif;
-      background: #fdf9f7;
+      font-family: 'Sarabun', sans-serif;
+      background-color: #4b1c1c;
+      color: #fef9f2;
       margin: 0;
-      padding: 2rem;
+      padding: 0;
     }
-    h1 {
-      color: #800020;
+    header {
+      background: #2d0f0f;
+      padding: 1rem;
+      text-align: center;
+    }
+    header img {
+      height: 50px;
+    }
+    main {
+      padding: 1rem;
     }
     table {
       width: 100%;
@@ -22,91 +30,75 @@
       margin-top: 1rem;
     }
     th, td {
-      border: 1px solid #ccc;
+      border: 1px solid #aa7b5e;
       padding: 0.5rem;
       text-align: left;
     }
     th {
-      background: #800020;
+      background-color: #5e2a2a;
+    }
+    tr:nth-child(even) {
+      background-color: #6e3a3a;
+    }
+    .status-paid {
+      color: #00ffb7;
+    }
+    .status-pending {
+      color: #ffd700;
+    }
+    .status-complete {
+      color: #7df542;
+    }
+    .btn {
+      padding: 0.3rem 0.6rem;
+      margin: 0 0.2rem;
+      background-color: #aa7b5e;
       color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
     }
-    tr:hover {
-      background: #f8eaea;
-    }
-    .actions button {
-      margin-right: 4px;
-    }
-    .status {
-      font-weight: bold;
-    }
-    .filter {
-      margin-bottom: 1rem;
+    .btn:hover {
+      background-color: #d29676;
     }
   </style>
 </head>
 <body>
-  <h1>รายการบิลทั้งหมด</h1>
-
-  <div class="filter">
-    <label>ค้นหา: <input type="text" id="searchInput" placeholder="ชื่อลูกค้า / เบอร์ / สถานะ" onkeyup="filterTable()" /></label>
-  </div>
-
-  <table id="ordersTable">
-    <thead>
-      <tr>
-        <th>เลขบิล</th>
-        <th>ชื่อ</th>
-        <th>วันที่</th>
-        <th>ยอดเต็ม</th>
-        <th>มัดจำ</th>
-        <th>สถานะ</th>
-        <th>ดูสลิป</th>
-        <th>จัดการ</th>
-      </tr>
-    </thead>
-    <tbody id="ordersBody">
-      <!-- data from Supabase จะถูกเติมที่นี่ -->
-    </tbody>
-  </table>
-
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-    const supabase = createClient(
-      'https://zhiflvlhamuijgxgeadr.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWZsdmxoYW11aWpneGdlYWRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYzNzUzNzIsImV4cCI6MjA2MTk1MTM3Mn0.ls2H6MOei5bDe07jTyiquGSQj-euw8rJH4643W2zKBk'
-    )
-
-    const loadOrders = async () => {
-      const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false })
-      const tbody = document.getElementById('ordersBody')
-      if (data) {
-        tbody.innerHTML = data.map(row => `
-          <tr>
-            <td>${row.id}</td>
-            <td>${row.name}</td>
-            <td>${new Date(row.date).toLocaleDateString('th-TH')}</td>
-            <td>฿${row.total}</td>
-            <td>฿${row.deposit}</td>
-            <td class="status">${row.status || 'รอตรวจ'}</td>
-            <td><a href="${row.slip_url || '#'}" target="_blank">${row.slip_url ? 'ดู' : '-'}</a></td>
-            <td class="actions">
-              <button onclick="editOrder(${row.id})">✏️</button>
-              <button onclick="deleteOrder(${row.id})">🗑️</button>
-            </td>
-          </tr>
-        `).join('')
-      }
-    }
-    loadOrders()
-
-    function filterTable() {
-      const input = document.getElementById("searchInput").value.toLowerCase()
-      const rows = document.querySelectorAll("#ordersBody tr")
-      rows.forEach(row => {
-        const text = row.textContent.toLowerCase()
-        row.style.display = text.includes(input) ? '' : 'none'
-      })
-    }
-  </script>
+  <header>
+    <img src="elf-logo.png" alt="ELF Logo" />
+    <h2>รายการออเดอร์</h2>
+  </header>
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th>วันที่</th>
+          <th>ลูกค้า</th>
+          <th>ยอดรวม</th>
+          <th>สถานะ</th>
+          <th>สลิป</th>
+          <th>การจัดการ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>5 พ.ค. 2025</td>
+          <td>คุณเอ</td>
+          <td>฿12,000</td>
+          <td class="status-paid">มัดจำแล้ว</td>
+          <td><button class="btn">ดู</button></td>
+          <td><button class="btn">แก้ไข</button><button class="btn">พิมพ์</button></td>
+        </tr>
+        <tr>
+          <td>4 พ.ค. 2025</td>
+          <td>คุณบี</td>
+          <td>฿9,800</td>
+          <td class="status-pending">รอยืนยัน</td>
+          <td><button class="btn">ดู</button></td>
+          <td><button class="btn">แก้ไข</button><button class="btn">พิมพ์</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
 </body>
 </html>
