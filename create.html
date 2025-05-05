@@ -2,73 +2,57 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>เปิดบิลใหม่ - ELF</title>
+  <meta charset="UTF-8">
+  <title>เปิดบิลใหม่ - ELF Admin</title>
   <style>
-    body {
-      font-family: 'Tahoma', sans-serif;
-      background-color: #fdfcf8;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      color: #660000;
-    }
-    form {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin: 15px 0 5px;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 8px;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-    button {
-      background-color: #800000;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
+    body { background: #2c0b0b; color: white; font-family: sans-serif; margin: 40px; }
+    label, input, select, textarea { display: block; margin: 10px 0; width: 100%; max-width: 400px; }
+    button { margin-top: 20px; padding: 10px 20px; }
+    .success { color: lime; margin-top: 20px; }
+    .error { color: red; margin-top: 20px; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
 </head>
 <body>
   <h1>เปิดบิลใหม่</h1>
-  <form>
-    <label>ชื่อลูกค้า</label>
-    <input type="text" placeholder="กรอกชื่อลูกค้า" />
 
-    <label>เบอร์โทร</label>
-    <input type="text" placeholder="เบอร์โทร" />
-
-    <label>รายการสินค้า</label>
-    <input type="text" placeholder="ปลอกหมอน / ผ้าคลุม / หมอนอิง" />
-
-    <label>ยอดรวม</label>
-    <input type="number" placeholder="บาท" />
-
-    <label>ขนส่ง</label>
-    <select>
-      <option value="normal">ส่งธรรมดา</option>
-      <option value="cod">เก็บเงินปลายทาง (COD)</option>
-    </select>
-
-    <label>Tracking No.</label>
-    <input type="text" placeholder="เลขแทรค" />
-
-    <label>หมายเหตุ</label>
-    <input type="text" placeholder="หมายเหตุเพิ่มเติม" />
-
+  <form id="order-form">
+    <label>ชื่อลูกค้า<input name="customer" required></label>
+    <label>ยอดรวม (บาท)<input name="amount" type="number" required></label>
+    <label>สถานะ
+      <select name="status">
+        <option value="รอตรวจ">รอตรวจ</option>
+        <option value="มัดจำแล้ว">มัดจำแล้ว</option>
+      </select>
+    </label>
+    <label>ลิงก์สลิป (URL)<input name="slip_url" type="url"></label>
+    <label>หมายเหตุ<textarea name="note"></textarea></label>
     <button type="submit">บันทึกบิล</button>
   </form>
+
+  <div class="success" id="success-msg" style="display:none;">✅ บันทึกสำเร็จ!</div>
+  <div class="error" id="error-msg" style="display:none;"></div>
+
+  <script>
+    const form = document.getElementById('order-form');
+    const successMsg = document.getElementById('success-msg');
+    const errorMsg = document.getElementById('error-msg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      const { error } = await supabase.from('orders').insert([{ ...data }]);
+      if (error) {
+        successMsg.style.display = 'none';
+        errorMsg.textContent = '❌ เกิดข้อผิดพลาด: ' + error.message;
+        errorMsg.style.display = 'block';
+      } else {
+        errorMsg.style.display = 'none';
+        successMsg.style.display = 'block';
+        form.reset();
+      }
+    });
+  </script>
 </body>
 </html>
