@@ -39,7 +39,11 @@
     );
 
     async function loadOrders() {
-      const { data, error } = await supabase.from('orders').select('*').order('id', { ascending: false });
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('id', { ascending: false });
+
       const tbody = document.getElementById('orders-body');
       tbody.innerHTML = '';
 
