@@ -1,59 +1,58 @@
 
 <!DOCTYPE html>
-<html lang="th">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>เปิดบิลใหม่ | ELF</title>
-  <style>
-    body { font-family: 'Noto Serif Thai', serif; background: #fff9f9; padding: 1rem; }
-    h1 { color: #800020; text-align: center; }
-    label { display: block; margin-top: 1rem; font-weight: bold; }
-    input, textarea, select, button {
-      width: 100%; max-width: 500px; display: block;
-      margin: 0.3rem auto 1rem; padding: 0.6rem; font-size: 1rem;
-    }
-    button { background: #800020; color: white; border: none; border-radius: 4px; cursor: pointer; }
-  </style>
+  <title>ELF เปิดบิล</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <h1>เปิดบิลใหม่</h1>
   <form id="billForm">
-    <label>ชื่อลูกค้า</label>
-    <input type="text" id="name" placeholder="เช่น คุณน้ำฝน">
-
-    <label>เบอร์โทร</label>
-    <input type="text" id="phone">
-
-    <label>ที่อยู่</label>
-    <textarea id="address" rows="3"></textarea>
-
-    <label>ลายผ้า</label>
-    <input type="text" id="fabric" placeholder="เลือกลายจากหน้า fabric.html">
-
-    <label>ยอดเต็ม (บาท)</label>
-    <input type="number" id="total">
-
-    <label>มัดจำ (บาท)</label>
-    <input type="number" id="deposit">
-
-    <label>วันที่นัดส่ง</label>
-    <input type="date" id="delivery">
-
+    <input type="text" id="customer_name" placeholder="ชื่อลูกค้า" required><br>
+    <input type="text" id="phone" placeholder="เบอร์โทร" required><br>
+    <input type="text" id="address" placeholder="ที่อยู่"><br>
+    <input type="text" id="fabric" placeholder="ลายผ้า" required><br>
+    <input type="number" id="total_price" placeholder="ยอดเต็ม" required><br>
+    <input type="number" id="deposit" placeholder="มัดจำ"><br>
+    <input type="date" id="delivery_date" placeholder="วันนัดส่ง"><br>
     <button type="submit">💾 บันทึกบิล</button>
   </form>
 
   <script>
-    // เติมชื่อผ้าอัตโนมัติจาก fabric.html
-    const savedFabric = localStorage.getItem("selected_fabric");
-    if (savedFabric) {
-      document.getElementById("fabric").value = savedFabric;
-      localStorage.removeItem("selected_fabric");
-    }
+    const supabase = window.supabase.createClient(
+      'https://zhiflvlhamuijgxgtdlf.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWZ2bGhtYXVpamd4Z3RkbGYiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTcxNDYxNjUwMiwiZXhwIjoyMDY5OTkyNTAyfQ.nWwaEyhVGkczv2W77cMIXW90NGuXCIKHX90_X3nfhPw'
+    );
 
-    document.getElementById("billForm").addEventListener("submit", function(e) {
+    document.getElementById("billForm").addEventListener("submit", async function(e) {
       e.preventDefault();
-      alert("ระบบบันทึกกำลังเชื่อมต่อ Supabase จริงเร็ว ๆ นี้");
+
+      const customer_name = document.getElementById("customer_name").value;
+      const phone = document.getElementById("phone").value;
+      const address = document.getElementById("address").value;
+      const fabric = document.getElementById("fabric").value;
+      const total_price = parseFloat(document.getElementById("total_price").value);
+      const deposit = parseFloat(document.getElementById("deposit").value || 0);
+      const delivery_date = document.getElementById("delivery_date").value;
+
+      const result = await supabase.from("orders").insert([{
+        customer_name,
+        phone,
+        address,
+        fabric,
+        total_price,
+        deposit,
+        delivery_date,
+        status: "มัดจำแล้ว",
+        created_at: new Date().toISOString()
+      }]);
+
+      if (result.error) {
+        alert("❌ เกิดข้อผิดพลาด: " + result.error.message);
+      } else {
+        alert("✅ บันทึกบิลสำเร็จ!");
+        document.getElementById("billForm").reset();
+      }
     });
   </script>
 </body>
