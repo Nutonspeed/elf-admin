@@ -1,4 +1,0 @@
-const supabase = createClient(
-  'https://zhiflvlhamuijgxgtdlf.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWZ2bGhtYXVpamd4Z3RkbGYiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTcxNDYxNjUwMiwiZXhwIjoyMDY5OTkyNTAyfQ.nWwaEyhVGkczv2W77cMIXW90NGuXCIKHX90_X3nfhPw'
-);
