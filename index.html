@@ -56,4 +56,37 @@
     });
   </script>
 </body>
+  <script>
+  // ... (อันนี้ถ้ามี script อื่นอยู่แล้ว ก็ตามด้วย openBill ตรงนี้ได้เลย)
+
+  async function openBill() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      alert('ยังไม่ได้เข้าสู่ระบบ');
+      return;
+    }
+
+    const { error } = await supabase.from('orders').insert([{
+      customer: document.getElementById('customer').value,
+      amount: parseFloat(document.getElementById('amount').value),
+      status: "มัดจำแล้ว",
+      slip_url: document.getElementById('slip_url').value,
+      cod_amount: 0,
+      note: "",
+      delivery_type: document.getElementById('delivery_type').value,
+      delivery_date: document.getElementById('delivery_date').value,
+      user_id: session.user.id
+    }]);
+
+    if (error) {
+      alert("บันทึกไม่สำเร็จ");
+    } else {
+      alert("เปิดบิลเรียบร้อย!");
+      window.location.href = "/orders.html";
+    }
+  }
+</script>
+</body>
+</html>
+
 </html>
